@@ -4,6 +4,8 @@ import Layout from "./layout/Layout";
 import Navbar from "./Nav/Navbar";
 import CreateBill from "./components/CreateBill";
 import PreviousBills from "./components/PreviousBills";
+import LatestBookings from "./components/LatestBookings";
+import BillView from "./components/Ui/BillView";
 
 function App() {
   return (
@@ -13,6 +15,9 @@ function App() {
         <Route path="/" element={<Hero />} />
         <Route path="/create-bill" element={<CreateBill />} />
         <Route path="/previous-bills" element={<PreviousBills />} />
+        <Route path="/latest-bookings" element={<LatestBookings />} />
+        <Route path="/edit-bill/:id" element={<CreateBill />} />
+        <Route path="/view-bill/:id" element={<BillView />} />
       </Routes>
     </Layout>
   );

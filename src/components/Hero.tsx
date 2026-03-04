@@ -19,14 +19,30 @@ const Hero = () => {
           with flawless billing management for every celebration.
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center sm:justify-start">
+        <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-4 justify-center sm:justify-start">
 
-          <Link to={"/create-bill"} className="bg-brand-rose text-white px-10 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 tracking-wide">
+          {/* Create Bill */}
+          <Link
+            to="/create-bill"
+            className="bg-brand-rose text-white px-10 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 tracking-wide"
+          >
             Create New Bill
           </Link>
 
-          <Link to={"/previous-bills"} className="border border-brand-gold text-brand-gold px-10 py-4 rounded-full hover:bg-brand-gold hover:text-white transition-all duration-300 tracking-wide">
+          {/* Previous Bills */}
+          <Link
+            to="/previous-bills"
+            className="border border-brand-gold text-brand-gold px-10 py-4 rounded-full hover:bg-brand-gold hover:text-white transition-all duration-300 tracking-wide"
+          >
             View Previous Bills
+          </Link>
+
+          {/* Latest Booking */}
+          <Link
+            to="/latest-bookings"
+            className="bg-brand-gold text-white px-10 py-4 rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 tracking-wide"
+          >
+            Latest Booking
           </Link>
 
         </div>
