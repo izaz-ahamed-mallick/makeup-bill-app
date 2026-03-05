@@ -8,6 +8,13 @@ import {
   Link
 } from "@react-pdf/renderer";
 
+import { Font } from "@react-pdf/renderer";
+
+Font.register({
+  family: "GreatVibes",
+  src: "/src/fonts/GreatVibes-Regular.ttf"
+});
+
 
 const styles = StyleSheet.create({
 
@@ -215,11 +222,10 @@ const styles = StyleSheet.create({
   },
 
   signature: {
-    fontSize: 16,
-    fontFamily: "Times-Italic",
+    fontSize: 20,
+    fontFamily: "GreatVibes",
     color: "#444"
   },
-
   smallLabel: {
     fontSize: 7,
     color: "#777"

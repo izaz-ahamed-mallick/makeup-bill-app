@@ -11,6 +11,8 @@ import jsPDF from "jspdf";
 import BillViewLoader from "../Loader/BillViewLoader";
 import { InvoicePDF } from "../pdf/InvoicePDF";
 import { pdf } from "@react-pdf/renderer";
+import { generateInvoiceNumber } from "../utils/getInvoice";
+import { getDownloadInvoice, sendInvoiceWhatsapp } from "../utils/getDownloadInvoice";
 
 interface Bill {
   id: number;
@@ -49,6 +51,7 @@ const BillView = () => {
 
   const [bill, setBill] = useState<Bill | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDownload, setDownload] = useState(false);
 
   const fetchBill = async () => {
 
@@ -75,22 +78,16 @@ const BillView = () => {
   };
 
 
-  const downloadInvoice = async () => {
-    const blob = await pdf(
-      <InvoicePDF bill={bill} invoiceNumber={invoiceNumber} />
-    ).toBlob();
-
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `invoice-${invoiceNumber}.pdf`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadInvoice = async (bill: Bill) => {
+    setDownload(true)
+    try {
+      await getDownloadInvoice(bill);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDownload(false)
+    }
   };
-
 
   if (loading) {
     return (
@@ -131,9 +128,7 @@ const BillView = () => {
   //     window.open(url, "_blank");
   //   };
 
-  const invoiceNumber = `PT-${new Date().getFullYear()}-${bill.id
-    .toString()
-    .padStart(5, "0")}`;
+  const invoiceNumber = generateInvoiceNumber(Number(bill?.id ?? 0));
 
 
 
@@ -148,22 +143,37 @@ const BillView = () => {
       <div className="max-w-3xl mx-auto mb-6 flex flex-col sm:flex-row justify-end gap-3">
 
         <button
-          onClick={downloadInvoice}
-          className="
+          onClick={() => downloadInvoice(bill)}
+          disabled={isDownload}
+          className={`
   flex items-center justify-center gap-2
   w-full sm:w-auto
   px-5 py-2.5
   rounded-full
   bg-gradient-to-r from-brand-rose to-pink-500
   text-white text-sm
-  shadow hover:shadow-lg transition
-  "
+  shadow transition-all duration-300
+  ${isDownload
+              ? "opacity-80 cursor-not-allowed"
+              : "hover:shadow-lg hover:scale-[1.02]"
+            }
+  `}
         >
-          <Download size={16} />
-          Download
+          {isDownload ? (
+            <>
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Preparing PDF...
+            </>
+          ) : (
+            <>
+              <Download size={16} />
+              Download
+            </>
+          )}
         </button>
 
         <button
+          onClick={() => sendInvoiceWhatsapp(bill)}
           className="
   flex items-center justify-center gap-2
   w-full sm:w-auto

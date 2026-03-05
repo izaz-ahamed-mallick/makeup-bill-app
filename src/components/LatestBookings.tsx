@@ -74,7 +74,10 @@ const LatestBookings = () => {
   };
 
   useEffect(() => {
-    fetchBookings();
+    const loadBooking = async () => {
+      await fetchBookings();
+    }
+    loadBooking()
   }, []);
 
   useEffect(() => {

@@ -4,15 +4,15 @@ import PreviousBillsLoader from "./Loader/PreviousBillsLoader";
 import BackButton from "./Ui/BackButton";
 import { Link } from "react-router-dom";
 import { Download, Eye } from "lucide-react";
-import { InvoicePDF } from "./pdf/InvoicePDF";
-import { generateInvoiceNumber } from "./Ui/getInvoice";
-import { pdf } from "@react-pdf/renderer";
+import type { Bill } from "./Types";
+import { getDownloadInvoice } from "./utils/getDownloadInvoice";
 
 const PAGE_SIZE = 8;
 
 const PreviousBills = () => {
+  const [isDownload, setDownload] = useState<number | null>(null)
 
-  const [bills, setBills] = useState<any[]>([]);
+  const [bills, setBills] = useState<Bill[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -53,24 +53,24 @@ const PreviousBills = () => {
   };
 
   useEffect(() => {
-    fetchBills();
+    const loadBills = async () => {
+      await fetchBills();
+    };
+
+    loadBills();
   }, [page, search, filter]);
-  const downloadInvoice = async () => {
-    const invoiceNumber = generateInvoiceNumber(Number(bills.id));
-    const blob = await pdf(
-      <InvoicePDF bill={bills} invoiceNumber={invoiceNumber} />
-    ).toBlob();
 
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `invoice-${invoiceNumber}.pdf`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadInvoice = async (bill: Bill) => {
+    setDownload(bill.id)
+    try {
+      await getDownloadInvoice(bill);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDownload(null)
+    }
   };
+
 
   return (
     <div className="py-10 sm:py-16">
@@ -306,20 +306,34 @@ const PreviousBills = () => {
                       </Link>
 
                       <button
-                        className="
-         flex-1
-          h-11
-          flex items-center justify-center gap-2
-          rounded-full
-          bg-gradient-to-r from-brand-rose to-pink-500
-          text-white
-          font-medium
-          hover:shadow-lg
-          transition-all duration-300
-          "
+                        onClick={() => downloadInvoice(bill)}
+                        disabled={isDownload === bill.id}
+                        className={`
+                              flex-1
+                              h-11
+                              flex items-center justify-center gap-2
+                              rounded-full
+                              bg-gradient-to-r from-brand-rose to-pink-500
+                              text-white
+                              font-medium
+                              transition-all duration-300
+                              ${isDownload === bill.id
+                            ? "opacity-70 cursor-not-allowed"
+                            : "hover:shadow-lg hover:scale-[1.02]"
+                          }
+  `}
                       >
-                        <Download size={18} />
-                        Download
+                        {isDownload === bill.id ? (
+                          <>
+                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            Preparing...
+                          </>
+                        ) : (
+                          <>
+                            <Download size={18} />
+                            Download
+                          </>
+                        )}
                       </button>
 
                     </div>
@@ -420,18 +434,26 @@ const PreviousBills = () => {
                             </Link>
 
                             <button
-                              className="
-  w-10 h-10
-  flex items-center justify-center
-  rounded-full
-  bg-gradient-to-r from-brand-rose to-pink-500
-  text-white
-  hover:shadow-lg
-  hover:scale-105
-  transition-all duration-300
-  "
+                              onClick={() => downloadInvoice(bill)}
+                              disabled={isDownload === bill.id}
+                              className={`
+                                  w-10 h-10
+                                  flex items-center justify-center
+                                  rounded-full
+                                  bg-gradient-to-r from-brand-rose to-pink-500
+                                  text-white
+                                  transition-all duration-300
+                                  ${isDownload === bill.id
+                                  ? "opacity-70 cursor-not-allowed"
+                                  : "hover:shadow-lg hover:scale-105"
+                                }
+  `}
                             >
-                              <Download size={18} />
+                              {isDownload === bill.id ? (
+                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                              ) : (
+                                <Download size={18} />
+                              )}
                             </button>
 
                           </div>
