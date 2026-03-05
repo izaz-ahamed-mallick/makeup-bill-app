@@ -6,11 +6,7 @@ import { supabase } from "../../lib/supabase";
 import { User, Phone, MapPin, Calendar, Clock, Facebook, MessageCircle, Download, CreditCard, Brush, Sparkles, IndianRupee, Banknote, Tag, Wallet } from "lucide-react";
 
 import BackButton from "./BackButton";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import BillViewLoader from "../Loader/BillViewLoader";
-import { InvoicePDF } from "../pdf/InvoicePDF";
-import { pdf } from "@react-pdf/renderer";
 import { generateInvoiceNumber } from "../utils/getInvoice";
 import { getDownloadInvoice, sendInvoiceWhatsapp } from "../utils/getDownloadInvoice";
 
@@ -72,10 +68,6 @@ const BillView = () => {
   useEffect(() => {
     fetchBill();
   }, [id]);
-
-  const handlePrint = () => {
-    window.print();
-  };
 
 
   const downloadInvoice = async (bill: Bill) => {

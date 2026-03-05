@@ -259,7 +259,9 @@ const LatestBookings = () => {
               return (
                 <div
                   key={booking.id}
-                  ref={(el) => (cardRefs.current[booking.id] = el)}
+                  ref={(el) => {
+                    cardRefs.current[booking.id] = el;
+                  }}
                   className={`rounded-3xl p-6 border backdrop-blur-sm transition-all duration-500
                 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1
                 ${highlightId === booking.id
