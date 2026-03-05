@@ -9,7 +9,11 @@ export type Bill = {
   date?: string
   time?: string
 
-  service?: string
+  services: {
+    service: string;
+    makeup_type: string;
+    price: number | string;
+  }[];
   makeup_type?: string
 
   total_package?: number
@@ -25,3 +29,28 @@ export type Bill = {
 
   full_payment?: boolean
 }
+
+
+export type ServiceItem = {
+  service: string;
+  makeup_type: string;
+  price: string;
+};
+
+export type BillForm = {
+  name: string;
+  address: string;
+  date: string;
+  time: string;
+  phone: string;
+  services: ServiceItem[];
+  total_package: string;
+  discount: string;
+  advanced: string;
+  due: string;
+  full_payment: boolean;
+  payment_mode: string;
+  terms: string;
+  confirmation_date: string;
+  signature: string;
+};

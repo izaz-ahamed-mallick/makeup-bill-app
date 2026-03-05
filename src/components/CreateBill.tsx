@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import SectionHeader from "./Ui/SectionHeader";
 import PremiumInput from "./Ui/PremiumInput";
 import PremiumRadio from "./Ui/PremiumRadio";
@@ -10,24 +10,59 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createBill, getBillById, updateBill } from "../Services/billService";
 import CreateBillLoader from "./Loader/CreateBillLoader";
 import BackButton from "./Ui/BackButton";
-
+import type { BillForm } from "./Types";
 
 const CreateBill = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { register, watch, setValue, handleSubmit, formState: { errors }, reset } = useForm();
-  const [showConfirm, setShowConfirm] = useState(false);
-  const selectedService = watch("service");
+
+  const {
+    register,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    control,
+  } = useForm<BillForm>({
+    defaultValues: {
+      services: [{ service: "", makeup_type: "", price: "" }],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "services",
+  });
+
+  const services = useWatch({
+    control,
+    name: "services",
+  });
   const total = watch("total_package");
   const discount = watch("discount");
   const advanced = watch("advanced");
   const fullPayment = watch("full_payment");
 
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loadingBill, setLoadingBill] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
+
   const previousAdvanced = useRef<string | null>(null);
+
+  /* -------------------- Auto Total Package -------------------- */
+
+  useEffect(() => {
+    const totalPrice = services.reduce(
+      (sum, service) => sum + (Number(service.price) || 0),
+      0
+    );
+
+    setValue("total_package", totalPrice.toString());
+  }, [services, setValue]);
+  /* -------------------- Due Calculation -------------------- */
 
   useEffect(() => {
     const totalNum = parseFloat(total) || 0;
@@ -35,7 +70,6 @@ const CreateBill = () => {
     const advancedNum = parseFloat(advanced) || 0;
 
     if (fullPayment) {
-      // Save previous advanced value before overriding
       if (previousAdvanced.current === null) {
         previousAdvanced.current = advanced;
       }
@@ -48,7 +82,6 @@ const CreateBill = () => {
       return;
     }
 
-    // Restore previous advanced value when unchecked
     if (!fullPayment && previousAdvanced.current !== null) {
       setValue("advanced", previousAdvanced.current);
       previousAdvanced.current = null;
@@ -57,8 +90,9 @@ const CreateBill = () => {
     const calculatedDue = totalNum - discountNum - advancedNum;
 
     setValue("due", Math.max(calculatedDue, 0).toString());
-
   }, [total, discount, advanced, fullPayment, setValue]);
+
+  /* -------------------- Load Bill (Edit Mode) -------------------- */
 
   useEffect(() => {
     if (!id) return;
@@ -70,7 +104,6 @@ const CreateBill = () => {
         const data = await getBillById(Number(id));
 
         reset(data);
-
       } catch (err) {
         console.error(err);
       } finally {
@@ -79,7 +112,9 @@ const CreateBill = () => {
     };
 
     loadBill();
-  }, [id, setValue]);
+  }, [id, reset]);
+
+  /* -------------------- Default Date -------------------- */
 
   useEffect(() => {
     if (!isEdit) {
@@ -88,18 +123,18 @@ const CreateBill = () => {
     }
   }, [isEdit, setValue]);
 
-
+  /* -------------------- Submit -------------------- */
 
   const onSubmit = async (data: any) => {
     setSubmitting(true);
+
     const payload = {
       name: data.name,
       address: data.address,
       date: data.date,
       time: data.time,
       phone: data.phone,
-      service: data.service,
-      makeup_type: data.makeup_type,
+      services: data.services,
       total_package: parseFloat(data.total_package) || 0,
       discount: parseFloat(data.discount) || 0,
       advanced: parseFloat(data.advanced) || 0,
@@ -113,8 +148,8 @@ const CreateBill = () => {
 
     try {
       if (isEdit) {
-
         await updateBill(Number(id), payload);
+
         enqueueSnackbar("Bill updated successfully 👑", {
           variant: "success",
         });
@@ -127,7 +162,9 @@ const CreateBill = () => {
           variant: "success",
         });
 
-        navigate("/latest-bookings", { state: { highlightId: newBill.id } });
+        navigate("/latest-bookings", {
+          state: { highlightId: newBill.id },
+        });
       }
     } catch (error) {
       console.error(error);
@@ -140,32 +177,33 @@ const CreateBill = () => {
     }
   };
 
-  if (loadingBill) {
-    return <CreateBillLoader />;
-  }
+  if (loadingBill) return <CreateBillLoader />;
 
   return (
     <div className="py-10 sm:py-16">
       <div className="mb-6">
         <BackButton />
       </div>
-      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-6 sm:p-12 border border-brand-blush">
+
+      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-6 sm:p-12">
 
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-brand-rose font-[Playfair Display]">
+
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-semibold text-brand-rose font-[Playfair Display]">
             Puja’s Touch
           </h2>
-          <p className="text-brand-text uppercase tracking-[0.2em] text-xs sm:text-sm mt-3 opacity-70">
+
+          <p className="text-xs uppercase tracking-[0.2em] mt-3 opacity-70">
             Luxury Bridal Billing Form
           </p>
-          <div className="w-24 h-[2px] bg-brand-gold mx-auto mt-4"></div>
         </div>
 
         {/* Client Info */}
+
         <SectionHeader title="Client Information" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-12 sm:mb-16">
+        <div className="grid md:grid-cols-2 gap-6 mb-16">
           <PremiumInput label="Client Name" register={register("name")} />
           <PremiumInput label="Location / Address" register={register("address")} />
           <PremiumInput label="Date" type="date" register={register("date")} />
@@ -174,50 +212,81 @@ const CreateBill = () => {
         </div>
 
         {/* Services */}
+
         <SectionHeader title="Services" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {["Bridal", "Reception", "Semi Bridal", "Party Makeup", "Other"].map((s) => (
-            <PremiumRadio
-              key={s}
-              label={s}
-              value={s}
-              register={register("service")}
-            />
-          ))}
-        </div>
+        {fields.map((field, index) => (
+          <div key={field.id} className="border rounded-xl p-6 mb-6 bg-white">
 
-        {selectedService === "Other" && (
-          <PremiumInput
-            label="Enter Custom Service"
-            register={register("otherService")}
-            className="mb-12"
-          />
-        )}
-        {/* Makeup Type */}
-        {selectedService && !(selectedService === "Other") && (
-          <>
-            <SectionHeader title="Makeup Type" />
+            {/* Service title */}
+            <h3 className="font-semibold text-brand-rose mb-6 text-lg">
+              {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+            </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12 sm:mb-16">
-              {[
-                "HD",
-                "NON HD",
-                "Waterproof",
-                "Sweatproof & Waterproof",
-              ].map((type) => (
+            {/* Service Selection */}
+            <p className="text-sm text-gray-500 mb-3 font-medium">Select Service</p>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {["Bridal", "Reception", "Semi Bridal", "Party Makeup"].map((s) => (
+                <PremiumRadio
+                  key={s}
+                  label={s}
+                  value={s}
+                  register={register(`services.${index}.service` as const)}
+                />
+              ))}
+            </div>
+
+            {/* Makeup Type */}
+            <p className="text-sm text-gray-500 mb-3 font-medium">
+              Makeup Type
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {["HD", "NON HD", "Waterproof", "Sweatproof & Waterproof"].map((type) => (
                 <PremiumRadio
                   key={type}
                   label={type}
                   value={type}
-                  register={register("makeup_type")}
+                  register={register(`services.${index}.makeup_type` as const)}
                 />
               ))}
             </div>
-          </>
-        )}
+
+            {/* Price */}
+            <PremiumInput
+              label="Package Price"
+              register={register(`services.${index}.price` as const)}
+              currency
+            />
+
+            {/* Remove button */}
+            {fields.length > 1 && index > 0 && (
+              <button
+                type="button"
+                onClick={() => remove(index)}
+                className="text-red-500 mt-4 text-sm"
+              >
+                Remove Service
+              </button>
+            )}
+
+          </div>
+        ))}
+
+        {/* Add Service button */}
+        <div className="flex justify-center mb-12">
+          <button
+            type="button"
+            onClick={() => append({ service: "", makeup_type: "", price: "" })}
+            className="bg-brand-rose hover:bg-brand-rose/90 text-white px-8 py-3 rounded-full font-medium transition"
+          >
+            + Add Another Service
+          </button>
+        </div>
 
         {/* Payment */}
+
         <SectionHeader title="Payment Details" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-12">
@@ -226,6 +295,7 @@ const CreateBill = () => {
             label="Total Package"
             register={register("total_package")}
             currency
+            readOnly
           />
 
           <PremiumInput
@@ -241,6 +311,8 @@ const CreateBill = () => {
             readOnly={fullPayment}
             className={`${fullPayment ? "ring-2 ring-green-300 bg-green-50" : ""}`}
           />
+
+          {/* Full Payment Toggle */}
           <label className="flex items-center gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -249,9 +321,7 @@ const CreateBill = () => {
             />
 
             <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 relative transition">
-
               <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
-
             </div>
 
             <span className="text-sm font-medium text-brand-text">
@@ -259,10 +329,11 @@ const CreateBill = () => {
             </span>
           </label>
 
+          {/* Due Amount */}
           <div className="relative">
             <div
               className={`w-full min-h-[56px] rounded-2xl border pl-4 pr-4 pt-6 pb-2 font-medium flex items-center transition-all duration-300
-    ${fullPayment
+        ${fullPayment
                   ? "bg-green-50 border-green-300 text-green-700"
                   : "bg-brand-blush/40 border-brand-gold text-brand-text"
                 }`}
@@ -274,7 +345,7 @@ const CreateBill = () => {
               ) : (
                 <>
                   <span className="text-brand-rose pr-1">₹</span>
-                  {formatCurrency(parseFloat(watch("due")) || 0).replace("₹", "")}
+                  {formatCurrency(Number(watch("due") || 0)).replace("₹", "")}
                 </>
               )}
             </div>
@@ -286,47 +357,15 @@ const CreateBill = () => {
 
         </div>
 
-        <div className="flex flex-wrap gap-6 mb-14">
-          <div className="flex flex-wrap gap-6 mb-14">
-            <PremiumRadio
-              label="Cash"
-              value="Cash"
-              register={register("payment_mode")}
-            />
+        {/* Payment Mode */}
 
-            <PremiumRadio
-              label="UPI"
-              value="UPI"
-              register={register("payment_mode")}
-            />
-          </div>
+        <div className="flex gap-6 mb-14">
+          <PremiumRadio label="Cash" value="Cash" register={register("payment_mode")} />
+          <PremiumRadio label="UPI" value="UPI" register={register("payment_mode")} />
         </div>
-
-        {/* Terms & Conditions */}
-        <SectionHeader title="Terms & Conditions" />
-
-        <div className="space-y-5 mb-12 sm:mb-16">
-
-          <PremiumRadio
-            label="Booking will be confirmed only after receiving the advance amount."
-            value="advance_required"
-            register={register("terms", { required: true })}
-          />
-
-          <PremiumRadio
-            label="If the client cancels the booking, the advance amount will not be refunded."
-            value="non_refundable"
-            register={register("terms", { required: true })}
-          />
-
-        </div>
-        {errors.terms && (
-          <p className="text-sm text-red-500 mt-2">
-            Please accept the terms before generating the bill.
-          </p>
-        )}
 
         {/* Confirmation */}
+
         <SectionHeader title="Confirmation" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-12">
@@ -354,39 +393,25 @@ const CreateBill = () => {
             Signature is required before generating the bill.
           </p>
         )}
-        {/* Generate Button */}
-        <div className="mt-10 sm:mt-14 flex justify-center sm:justify-end">
+
+        {/* Submit */}
+
+        <div className="flex justify-end">
           <button
             type="button"
             disabled={submitting}
             onClick={() => setShowConfirm(true)}
-            className={`w-full sm:w-auto min-h-[56px] px-10 py-4 rounded-full
-    bg-gradient-to-r from-brand-rose to-pink-500
-    text-white font-semibold tracking-wide
-    flex items-center justify-center gap-3
-    shadow-lg transition-all duration-300
-    ${submitting
-                ? "opacity-70 cursor-not-allowed"
-                : "hover:shadow-2xl hover:-translate-y-0.5"
-              }`}
+            className="px-10 py-4 rounded-full bg-brand-rose text-white"
           >
-
-            {submitting ? (
-              <>
-                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Processing...
-              </>
-            ) : (
-              `${isEdit ? "Update Bill" : "Generate Bill"}`
-            )}
-
+            {isEdit ? "Update Bill" : "Generate Bill"}
           </button>
         </div>
       </div>
+
       <ConfirmModal
         open={showConfirm}
         title="Confirm Bill Generation"
-        message="Please review all details carefully before generating the bill. Once generated, changes cannot be undone."
+        message="Please review all details carefully before generating the bill."
         onCancel={() => setShowConfirm(false)}
         onConfirm={() => {
           setShowConfirm(false);

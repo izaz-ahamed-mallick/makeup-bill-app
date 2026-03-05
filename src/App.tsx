@@ -6,6 +6,8 @@ import CreateBill from "./components/CreateBill";
 import PreviousBills from "./components/PreviousBills";
 import LatestBookings from "./components/LatestBookings";
 import BillView from "./components/Ui/BillView";
+import UpcomingBookings from "./components/UpcomingBookings";
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
         <Route path="/latest-bookings" element={<LatestBookings />} />
         <Route path="/edit-bill/:id" element={<CreateBill />} />
         <Route path="/view-bill/:id" element={<BillView />} />
+        <Route path="/upcoming-bookings" element={<UpcomingBookings />} />
       </Routes>
     </Layout>
   );

@@ -292,9 +292,28 @@ const PreviousBills = () => {
 
                     <p className="text-sm text-gray-500">{bill.date}</p>
 
-                    <p className="text-sm mt-2">
-                      <span className="font-medium">Service:</span> {bill.service}
-                    </p>
+                    <div className="text-sm mt-2">
+                      <span className="font-medium block mb-1">Services</span>
+
+                      <div className="flex flex-wrap gap-2">
+                        {bill.services?.map((s, i) => (
+                          <span
+                            key={i}
+                            className="
+                              px-3 py-1
+                              text-xs
+                              rounded-full
+                              bg-brand-blush/40
+                              border border-brand-blush
+                              text-brand-text
+                              shadow-sm
+                              "
+                          >
+                            {s.service} • {s.makeup_type}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
                     <p className="text-sm">
                       <span className="font-medium">Total:</span> ₹{bill.total_package}
@@ -409,7 +428,28 @@ const PreviousBills = () => {
                         </td>
 
                         <td className="px-6 py-4">
-                          {bill.service}
+                          <div className="flex flex-wrap gap-1">
+                            {bill.services?.slice(0, 2).map((s, i) => (
+                              <span
+                                key={i}
+                                className="
+        px-2 py-1
+        text-xs
+        rounded-full
+        bg-brand-blush/40
+        border border-brand-blush
+        "
+                              >
+                                {s.service}
+                              </span>
+                            ))}
+
+                            {bill.services?.length > 2 && (
+                              <span className="text-xs text-gray-500">
+                                +{bill.services.length - 2} more
+                              </span>
+                            )}
+                          </div>
                         </td>
 
                         <td className="px-6 py-4 font-medium">

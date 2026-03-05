@@ -42,6 +42,8 @@ export const getDownloadInvoice = async (
   }
 };
 
+
+
 export const sendInvoiceWhatsapp = (bill: Bill) => {
   try {
     const invoiceNumber = generateInvoiceNumber(Number(bill?.id ?? 0));
@@ -53,32 +55,37 @@ export const sendInvoiceWhatsapp = (bill: Bill) => {
       ? "Payment Status: Completed"
       : "Payment Status: Pending";
 
+    const servicesText = bill.services
+      ?.map((s) => `• ${s.service} (${s.makeup_type})`)
+      .join("\n") || "Service not specified";
     const message = `
 Hello ${bill.name},
 
-Thank you for choosing *Puja's Touch – Luxury Bridal Makeup Studio*.
+*Puja's Touch – Luxury Bridal Makeup*
 
-Please find your *invoice attached with this message.*
+Your booking invoice details are below.
 
---------------------------------
+━━━━━━━━━━━━━━━━
+*Invoice No:* ${invoiceNumber}
 
-Invoice No: ${invoiceNumber}
-Service: ${bill.service}
+ *Services*
+${servicesText}
 
-Total Package: ₹${bill.total_package}
-Discount: ₹${discount}
-Advance Paid: ₹${advance}
-Due Amount: ₹${bill.due}
+ *Total Package:* ₹${bill.total_package}
+ *Discount:* ₹${discount}
+ *Advance Paid:* ₹${advance}
+ *Due Amount:* ₹${bill.due}
 
 ${paymentStatus}
 
---------------------------------
+━━━━━━━━━━━━━━━━
 
-We look forward to serving you and making your special day even more beautiful.
+Thank you for trusting *Puja's Touch*
+We look forward to making your special day even more beautiful.
 
 Warm regards,
 *Puja's Touch*
-Luxury Bridal Makeup Studio
+Luxury Bridal Makeup Artist
 `;
 
     const encoded = encodeURIComponent(message);

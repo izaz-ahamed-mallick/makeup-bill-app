@@ -11,8 +11,11 @@ interface Booking {
   id: number;
   name: string;
   date: string;
-  service: string;
-  makeup_type: string;
+  services: {
+    service: string;
+    makeup_type: string;
+    price: number | string;
+  }[];
   total_package: number;
   discount: number;
   advanced: number;
@@ -37,7 +40,7 @@ const LatestBookings = () => {
     const { data, error } = await supabase
       .from("bills")
       .select(
-        "id, name, date, service, makeup_type, total_package, discount, advanced, due"
+        "id, name, date, services, total_package, discount, advanced, due"
       )
       .order("created_at", { ascending: false })
       .limit(10);
@@ -315,15 +318,25 @@ const LatestBookings = () => {
                     {/* Service */}
                     <div className="space-y-2 text-sm text-brand-text mb-6">
 
-                      <p>
-                        <span className="font-medium">Service:</span>{" "}
-                        {booking.service}
-                      </p>
+                      <p className="font-medium">Services:</p>
 
-                      <p>
-                        <span className="font-medium">Makeup Type:</span>{" "}
-                        {booking.makeup_type}
-                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {booking.services?.map((s, index) => (
+                          <span
+                            key={index}
+                            className="
+        px-3 py-1
+        text-xs
+        rounded-full
+        bg-brand-blush/40
+        text-brand-text
+        border border-brand-blush
+        "
+                          >
+                            {s.service} • {s.makeup_type}
+                          </span>
+                        ))}
+                      </div>
 
                     </div>
 

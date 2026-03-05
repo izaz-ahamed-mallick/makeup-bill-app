@@ -17,9 +17,12 @@ interface Bill {
   phone: string;
   date: string;
   time: string;
-  service: string;
-  makeup_type?: string;
-  payment_mode?: string;
+  services: {
+    service: string;
+    makeup_type: string;
+    price: number;
+  }[];
+  payment_mode?: string
   total_package: number;
   discount?: number;
   advanced?: number;
@@ -133,8 +136,10 @@ const BillView = () => {
   const paid = bill.due === 0;
 
   return (
-    <div className="py-10 md:py-16 px-3 md:px-4 bg-brand-blush/20 min-h-screen">
-      <BackButton />
+    <div className="py-10 md:py-16  md:px-4 bg-brand-blush/20 min-h-screen">
+      <div className="mb-3">
+        <BackButton />
+      </div>
       {/* ACTION BAR */}
       <div className="max-w-3xl mx-auto mb-6 flex flex-col sm:flex-row justify-end gap-3">
 
@@ -308,16 +313,7 @@ const BillView = () => {
             </span>
 
             <a
-              href="https://wa.me/919064689899"
-              target="_blank"
-              className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition backdrop-blur-sm"
-            >
-              <MessageCircle size={16} />
-              WhatsApp
-            </a>
-
-            <a
-              href="https://facebook.com/YOUR_PROFILE"
+              href="https://www.facebook.com/share/1891GsRTi7/?mibextid=wwXIfr"
               target="_blank"
               className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition backdrop-blur-sm"
             >
@@ -418,31 +414,39 @@ const BillView = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-              {/* Service */}
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition">
-                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose">
-                  <Sparkles size={18} />
-                </div>
+              {bill.services?.map((service, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition"
+                >
 
-                <div>
-                  <p className="text-xs text-gray-500">Service</p>
-                  <p className="font-medium">{bill.service}</p>
-                </div>
-              </div>
-
-              {/* Makeup Type */}
-              {bill.makeup_type && (
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition">
                   <div className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose">
-                    <Brush size={18} />
+                    <Sparkles size={18} />
                   </div>
 
-                  <div>
-                    <p className="text-xs text-gray-500">Makeup Type</p>
-                    <p className="font-medium">{bill.makeup_type}</p>
+                  <div className="flex-1">
+
+                    {/* Service label */}
+                    <p className="text-xs text-gray-500">
+                      {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+                    </p>
+
+                    <p className="font-semibold text-gray-800">
+                      {service.service}
+                    </p>
+
+                    <p className="text-sm text-gray-500">
+                      {service.makeup_type}
+                    </p>
+
                   </div>
+
+                  <div className="text-sm font-semibold text-brand-rose">
+                    {formatCurrency(service.price)}
+                  </div>
+
                 </div>
-              )}
+              ))}
 
               {/* Payment Mode */}
               <div className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition md:col-span-2">

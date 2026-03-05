@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
   page: {
     backgroundColor: "#ffffff",
-    padding: 12,
+    padding: 10,
     fontFamily: "Helvetica"
   },
 
@@ -46,50 +46,50 @@ const styles = StyleSheet.create({
 
   header: {
     backgroundColor: "#ec4899",
-    paddingTop: 14,
-    paddingBottom: 10,
+    paddingTop: 12,
+    paddingBottom: 8,
     alignItems: "center",
     position: "relative"
   },
 
   logo: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 50,
     border: "3px solid #facc15",
-    marginBottom: 4
+    marginBottom: 3
   },
 
   brand: {
-    fontSize: 24,
+    fontSize: 22,
     color: "#ffd700",
     fontWeight: "bold"
   },
 
   tagline: {
     marginTop: 2,
-    fontSize: 9,
+    fontSize: 8,
     color: "#fff"
   },
 
   location: {
-    fontSize: 8,
+    fontSize: 7,
     color: "#fff",
     marginTop: 1
   },
 
   contactRow: {
     flexDirection: "row",
-    marginTop: 6
+    marginTop: 4
   },
 
   contactItem: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255,255,255,0.15)",
-    padding: "3 8",
+    padding: "2 7",
     borderRadius: 20,
-    marginHorizontal: 3
+    marginHorizontal: 2
   },
 
   contactIcon: {
@@ -130,25 +130,25 @@ const styles = StyleSheet.create({
     width: "48%",
     border: "1px solid #f5cbd8",
     borderRadius: 8,
-    padding: 6,
-    marginBottom: 5
+    padding: 3,
+    marginBottom: 3
   },
 
   cardFull: {
     width: "100%",
     border: "1px solid #f5cbd8",
     borderRadius: 8,
-    padding: 6,
-    marginBottom: 5
+    padding: 4,
+    marginBottom: 4
   },
 
   label: {
-    fontSize: 7,
+    fontSize: 6,
     color: "#777"
   },
 
   value: {
-    fontSize: 9,
+    fontSize: 7,
     marginTop: 1
   },
 
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     border: "1px solid #f5cbd8",
     borderRadius: 12,
     backgroundColor: "#fff5f7",
-    padding: 12
+    padding: 9
   },
 
   paymentRow: {
@@ -190,12 +190,12 @@ const styles = StyleSheet.create({
   },
 
   dueLabel: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "bold"
   },
 
   dueValue: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#e11d48"
   },
@@ -205,11 +205,11 @@ const styles = StyleSheet.create({
     border: "1px solid #fde68a",
     backgroundColor: "#fff9db",
     borderRadius: 10,
-    padding: 8
+    padding: 6
   },
 
   term: {
-    fontSize: 7,
+    fontSize: 6,
     marginBottom: 1
   },
 
@@ -218,11 +218,11 @@ const styles = StyleSheet.create({
   signatureSection: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 5
+    marginTop: 4
   },
 
   signature: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "GreatVibes",
     color: "#444"
   },
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 6,
-    marginBottom: 10
+    marginBottom: 6
   },
 
   signatureLine: {
@@ -254,9 +254,9 @@ const styles = StyleSheet.create({
   /* FOOTER */
 
   footer: {
-    marginTop: 4,
+    marginTop: 3,
     textAlign: "center",
-    fontSize: 8,
+    fontSize: 7,
     color: "#666"
   }
   ,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
 
   dividerStar: {
-    fontSize: 9,
+    fontSize: 8,
     marginLeft: 6,
     marginRight: 6,
     color: "#facc15"
@@ -360,7 +360,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
             <Text style={styles.brand}>Puja's Touch</Text>
 
             <Text style={styles.tagline}>
-              Luxury Bridal Makeup Studio
+              Luxury Bridal Makeup Artist
             </Text>
 
             <Text style={styles.location}>
@@ -374,7 +374,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                 <Text style={styles.contactText}>9064689899</Text>
               </View>
 
-              <Link src="https://facebook.com/YOUR_PAGE" style={styles.contactItem}>
+              <Link src="https://www.facebook.com/share/1891GsRTi7/?mibextid=wwXIfr" style={styles.contactItem}>
                 <Image src="/fb.png" style={styles.contactIcon} />
                 <Text style={styles.contactText}>Puja's Touch</Text>
               </Link>
@@ -434,17 +434,44 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
 
             <View style={styles.grid}>
 
-              <View style={styles.card}>
-                <Text style={styles.label}>Service</Text>
-                <Text style={styles.value}>{bill.service}</Text>
-              </View>
+              {bill.services?.map((service, index) => (
 
-              {bill.makeup_type && (
-                <View style={styles.card}>
-                  <Text style={styles.label}>Makeup Type</Text>
-                  <Text style={styles.value}>{bill.makeup_type}</Text>
+                <View key={index} style={styles.cardFull}>
+
+                  <Text style={styles.label}>
+                    {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    }}
+                  >
+
+                    <View>
+                      <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                        {service.service}
+                      </Text>
+
+                      <Text style={{ fontSize: 8, color: "#666" }}>
+                        {service.makeup_type}
+                      </Text>
+                    </View>
+
+                    <View style={styles.priceRow}>
+                      <Image src="/rupee.png" style={styles.rupeeIcon} />
+                      <Text style={{ fontSize: 10, fontWeight: "bold", color: "#e11d48" }}>
+                        {service.price}
+                      </Text>
+                    </View>
+
+                  </View>
+
                 </View>
-              )}
+
+              ))}
 
               <View style={styles.cardFull}>
                 <Text style={styles.label}>Payment Mode</Text>
