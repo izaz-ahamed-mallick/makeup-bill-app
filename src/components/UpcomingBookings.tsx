@@ -78,13 +78,16 @@ Looking forward to making your day even more beautiful
     const today = new Date();
     const bookingDate = new Date(date);
 
-    const todayStr = today.toISOString().split("T")[0];
+    const todayDate = today.toDateString();
+    const bookingDateStr = bookingDate.toDateString();
+
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+    const tomorrowDate = tomorrow.toDateString();
 
-    if (date === todayStr) return "today";
-    if (date === tomorrowStr) return "tomorrow";
+    if (bookingDateStr === todayDate) return "today";
+    if (bookingDateStr === tomorrowDate) return "tomorrow";
+
     return "upcoming";
   };
 
