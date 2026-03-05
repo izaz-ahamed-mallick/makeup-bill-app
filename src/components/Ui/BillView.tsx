@@ -9,7 +9,7 @@ import BackButton from "./BackButton";
 import BillViewLoader from "../Loader/BillViewLoader";
 import { generateInvoiceNumber } from "../utils/getInvoice";
 import { getDownloadInvoice, sendInvoiceWhatsapp } from "../utils/getDownloadInvoice";
-
+import { useSnackbar } from "notistack";
 interface Bill {
   id: number;
   name: string;
@@ -70,10 +70,14 @@ const BillView = () => {
   }, [id]);
 
 
+
+  const { enqueueSnackbar } = useSnackbar();
+
+
   const downloadInvoice = async (bill: Bill) => {
     setDownload(true)
     try {
-      await getDownloadInvoice(bill);
+      await getDownloadInvoice(bill, enqueueSnackbar);
     } catch (error) {
       console.error(error);
     } finally {

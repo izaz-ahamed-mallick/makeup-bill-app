@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Download, Eye } from "lucide-react";
 import type { Bill } from "./Types";
 import { getDownloadInvoice } from "./utils/getDownloadInvoice";
-
+import { useSnackbar } from "notistack";
 const PAGE_SIZE = 8;
 
 const PreviousBills = () => {
@@ -60,10 +60,15 @@ const PreviousBills = () => {
     loadBills();
   }, [page, search, filter]);
 
+
+
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const downloadInvoice = async (bill: Bill) => {
     setDownload(bill.id)
     try {
-      await getDownloadInvoice(bill);
+      await getDownloadInvoice(bill, enqueueSnackbar);
     } catch (error) {
       console.error(error);
     } finally {

@@ -4,7 +4,10 @@ import { generateInvoiceNumber } from "./getInvoice";
 import type { Bill } from '../Types';
 
 
-export const getDownloadInvoice = async (bill: Bill) => {
+export const getDownloadInvoice = async (
+  bill: Bill,
+  enqueueSnackbar: (message: string, options?: any) => void
+) => {
   try {
     const invoiceNumber = generateInvoiceNumber(Number(bill?.id ?? 0));
 
@@ -23,8 +26,19 @@ export const getDownloadInvoice = async (bill: Bill) => {
     document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
+
+    // ✅ Success snackbar
+    enqueueSnackbar("Invoice downloaded successfully", {
+      variant: "success",
+    });
+
   } catch (error) {
     console.error("Invoice download failed:", error);
+
+    // ❌ Error snackbar
+    enqueueSnackbar("Failed to download invoice", {
+      variant: "error",
+    });
   }
 };
 

@@ -8,14 +8,14 @@ import {
   Link
 } from "@react-pdf/renderer";
 
+import type { Bill } from "../Types";
+
 import { Font } from "@react-pdf/renderer";
 
 Font.register({
   family: "GreatVibes",
-  src: "/src/fonts/GreatVibes-Regular.ttf"
+  src: "/fonts/GreatVibes-Regular.ttf",
 });
-
-
 const styles = StyleSheet.create({
 
   page: {
@@ -329,8 +329,8 @@ const styles = StyleSheet.create({
 });
 
 interface pdfType {
-  bill: any,
-  invoiceNumber: any
+  bill: Bill,
+  invoiceNumber: string | number;
 }
 
 export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
