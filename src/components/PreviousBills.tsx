@@ -79,7 +79,9 @@ const PreviousBills = () => {
 
   return (
     <div className="py-10 sm:py-16">
-      <BackButton />
+      <div className="mb-6">
+        <BackButton />
+      </div>
       <div className="max-w-7xl mx-auto px-4">
 
         {/* Header */}
@@ -198,33 +200,46 @@ const PreviousBills = () => {
 
         {loading && <PreviousBillsLoader />}
 
-
         {!loading && bills.length === 0 ? (
+
+          <div className="py-28 flex flex-col items-center justify-center text-center">
+
+            <div className="w-20 h-20 rounded-full bg-brand-blush/40 flex items-center justify-center mb-6 text-3xl">
+              🧾
+            </div>
+
+            <h3 className="text-xl font-semibold text-brand-text">
+              No bills yet
+            </h3>
+
+            <p className="text-sm text-gray-500 mt-2 max-w-sm">
+              You haven't created any billing records yet.
+              Start by creating your first client bill.
+            </p>
+
+            <Link
+              to="/create-bill"
+              className="mt-6 px-6 py-2 rounded-full bg-brand-rose text-white text-sm shadow hover:shadow-lg transition"
+            >
+              + Create Bill
+            </Link>
+
+          </div>
+
+        ) : !loading && bills.length === 0 ? (
+
           <div className="py-24 flex flex-col items-center justify-center text-center">
 
-            <div className="w-16 h-16 rounded-full bg-brand-blush/40 flex items-center justify-center mb-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-7 h-7 text-brand-rose"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 13h6m-6 4h6M5 7h14M5 7l1 12h12l1-12"
-                />
-              </svg>
+            <div className="w-16 h-16 rounded-full bg-brand-blush/40 flex items-center justify-center mb-6 text-xl">
+              🔍
             </div>
 
             <h3 className="text-lg font-semibold text-brand-text">
-              No Bills Found
+              No bills found
             </h3>
 
             <p className="text-sm text-gray-500 mt-2">
-              No billing records match your search or filter.
+              No billing records match your search or selected filter.
             </p>
 
             <button
@@ -239,6 +254,7 @@ const PreviousBills = () => {
             </button>
 
           </div>
+
         ) :
 
           (<>

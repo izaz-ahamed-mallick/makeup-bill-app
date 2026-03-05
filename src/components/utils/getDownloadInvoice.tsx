@@ -58,7 +58,7 @@ Hello ${bill.name},
 
 Thank you for choosing *Puja's Touch – Luxury Bridal Makeup Studio*.
 
-Your invoice will be shared with you shortly.
+Please find your *invoice attached with this message.*
 
 --------------------------------
 
@@ -74,10 +74,10 @@ ${paymentStatus}
 
 --------------------------------
 
-Please find the invoice attached in the next message.
+We look forward to serving you and making your special day even more beautiful.
 
 Warm regards,
-Puja's Touch
+*Puja's Touch*
 Luxury Bridal Makeup Studio
 `;
 
@@ -86,7 +86,6 @@ Luxury Bridal Makeup Studio
     const whatsappUrl = `https://wa.me/91${bill.phone}?text=${encoded}`;
 
     window.open(whatsappUrl, "_blank");
-
   } catch (error) {
     console.error("WhatsApp failed:", error);
   }

@@ -116,16 +116,6 @@ const LatestBookings = () => {
 
   /* -------------------- Empty State -------------------- */
 
-  if (!loading && bookings.length === 0) {
-    return (
-      <div className="py-24 text-center text-brand-text">
-        <p className="text-xl font-semibold">No bookings yet</p>
-        <p className="text-sm opacity-70 mt-2">
-          Create your first bridal booking.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="py-10 sm:py-16">
@@ -224,132 +214,159 @@ const LatestBookings = () => {
           </div>
 
         </div>
-        {filteredBookings.length === 0 ? (
+        {
+          bookings.length === 0 ? (
 
-          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="flex flex-col items-center justify-center py-28 text-center">
 
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-brand-blush/40 mb-6">
-              🔍
+              <div className="w-20 h-20 flex items-center justify-center rounded-full bg-brand-blush/40 mb-6 text-3xl">
+                📅
+              </div>
+
+              <h3 className="text-xl font-semibold text-brand-text">
+                No bookings yet
+              </h3>
+
+              <p className="text-sm text-gray-500 mt-2 max-w-sm">
+                You haven't added any client bookings yet.
+                Start by creating your first booking.
+              </p>
+
+              <Link
+                to="/create-bill"
+                className="mt-6 px-6 py-2 rounded-full bg-brand-rose text-white text-sm shadow hover:shadow-lg transition"
+              >
+                + Create Booking
+              </Link>
+
             </div>
 
-            <h3 className="text-lg font-semibold text-brand-text">
-              No bookings found
-            </h3>
+          ) : filteredBookings.length === 0 ? (
 
-            <p className="text-sm text-gray-500 mt-2">
-              No client matches <span className="font-medium">"{search}"</span>
-            </p>
+            <div className="flex flex-col items-center justify-center py-24 text-center">
 
-            <button
-              onClick={() => setSearch("")}
-              className="mt-6 px-6 py-2 rounded-full bg-brand-rose text-white text-sm shadow hover:shadow-lg transition"
-            >
-              Clear Search
-            </button>
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-brand-blush/40 mb-6 text-xl">
+                🔍
+              </div>
 
-          </div>
+              <h3 className="text-lg font-semibold text-brand-text">
+                No bookings found
+              </h3>
 
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <p className="text-sm text-gray-500 mt-2">
+                No client matches <span className="font-medium">"{search}"</span>
+              </p>
 
-            {filteredBookings.map((booking) => {
+              <button
+                onClick={() => setSearch("")}
+                className="mt-6 px-6 py-2 rounded-full bg-brand-rose text-white text-sm shadow hover:shadow-lg transition"
+              >
+                Clear Search
+              </button>
 
-              const isPaid = booking.due === 0;
+            </div>
 
-              return (
-                <div
-                  key={booking.id}
-                  ref={(el) => {
-                    cardRefs.current[booking.id] = el;
-                  }}
-                  className={`rounded-3xl p-6 border backdrop-blur-sm transition-all duration-500
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+              {filteredBookings.map((booking) => {
+
+                const isPaid = booking.due === 0;
+
+                return (
+                  <div
+                    key={booking.id}
+                    ref={(el) => {
+                      cardRefs.current[booking.id] = el;
+                    }}
+                    className={`rounded-3xl p-6 border backdrop-blur-sm transition-all duration-500
                 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1
                 ${highlightId === booking.id
-                      ? "bg-yellow-50 border-yellow-300 shadow-xl scale-[1.03]"
-                      : "bg-white/90 border-brand-blush shadow-md"
-                    }`}
-                >
+                        ? "bg-yellow-50 border-yellow-300 shadow-xl scale-[1.03]"
+                        : "bg-white/90 border-brand-blush shadow-md"
+                      }`}
+                  >
 
-                  {/* Client */}
-                  <div className="flex justify-between items-start mb-5">
+                    {/* Client */}
+                    <div className="flex justify-between items-start mb-5">
 
-                    <div>
-                      <h3 className="text-lg font-semibold text-brand-text">
-                        {booking.name}
-                      </h3>
+                      <div>
+                        <h3 className="text-lg font-semibold text-brand-text">
+                          {booking.name}
+                        </h3>
 
-                      <p className="text-sm text-gray-500 mt-1">
-                        {booking.date}
-                      </p>
-                    </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {booking.date}
+                        </p>
+                      </div>
 
-                    <span
-                      className={`px-3 py-1 text-xs rounded-full
+                      <span
+                        className={`px-3 py-1 text-xs rounded-full
                     ${isPaid
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                        }`}
-                    >
-                      {isPaid ? "Paid" : "Pending"}
-                    </span>
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                          }`}
+                      >
+                        {isPaid ? "Paid" : "Pending"}
+                      </span>
 
-                  </div>
-
-                  {/* Service */}
-                  <div className="space-y-2 text-sm text-brand-text mb-6">
-
-                    <p>
-                      <span className="font-medium">Service:</span>{" "}
-                      {booking.service}
-                    </p>
-
-                    <p>
-                      <span className="font-medium">Makeup Type:</span>{" "}
-                      {booking.makeup_type}
-                    </p>
-
-                  </div>
-
-                  {/* Payment */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-
-                    <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
-                      <p className="text-xs text-gray-500">Total</p>
-                      <p className="font-semibold">
-                        {formatCurrency(booking.total_package)}
-                      </p>
                     </div>
 
-                    <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
-                      <p className="text-xs text-gray-500">Discount</p>
-                      <p className="font-semibold text-green-600">
-                        - {formatCurrency(booking.discount)}
+                    {/* Service */}
+                    <div className="space-y-2 text-sm text-brand-text mb-6">
+
+                      <p>
+                        <span className="font-medium">Service:</span>{" "}
+                        {booking.service}
                       </p>
+
+                      <p>
+                        <span className="font-medium">Makeup Type:</span>{" "}
+                        {booking.makeup_type}
+                      </p>
+
                     </div>
 
-                    <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
-                      <p className="text-xs text-gray-500">Advanced</p>
-                      <p className="font-semibold">
-                        {formatCurrency(booking.advanced)}
-                      </p>
+                    {/* Payment */}
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+
+                      <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
+                        <p className="text-xs text-gray-500">Total</p>
+                        <p className="font-semibold">
+                          {formatCurrency(booking.total_package)}
+                        </p>
+                      </div>
+
+                      <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
+                        <p className="text-xs text-gray-500">Discount</p>
+                        <p className="font-semibold text-green-600">
+                          - {formatCurrency(booking.discount)}
+                        </p>
+                      </div>
+
+                      <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
+                        <p className="text-xs text-gray-500">Advanced</p>
+                        <p className="font-semibold">
+                          {formatCurrency(booking.advanced)}
+                        </p>
+                      </div>
+
+                      <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
+                        <p className="text-xs text-gray-500">Due</p>
+                        <p className="font-semibold text-brand-rose">
+                          {formatCurrency(booking.due)}
+                        </p>
+                      </div>
+
                     </div>
 
-                    <div className="bg-brand-blush/40 rounded-xl p-3 text-center">
-                      <p className="text-xs text-gray-500">Due</p>
-                      <p className="font-semibold text-brand-rose">
-                        {formatCurrency(booking.due)}
-                      </p>
-                    </div>
+                    {/* Buttons */}
+                    <div className="flex gap-3 mt-4">
 
-                  </div>
-
-                  {/* Buttons */}
-                  <div className="flex gap-3 mt-4">
-
-                    {/* VIEW */}
-                    <Link
-                      to={`/view-bill/${booking.id}`}
-                      className="
+                      {/* VIEW */}
+                      <Link
+                        to={`/view-bill/${booking.id}`}
+                        className="
     flex-1 flex items-center justify-center
     min-h-[42px]
     border border-blue-300
@@ -361,14 +378,14 @@ const LatestBookings = () => {
     transition-all duration-300
     shadow-sm hover:shadow-md
     "
-                    >
-                      👁 View
-                    </Link>
+                      >
+                        👁 View
+                      </Link>
 
-                    {/* EDIT */}
-                    <Link
-                      to={`/edit-bill/${booking.id}`}
-                      className="
+                      {/* EDIT */}
+                      <Link
+                        to={`/edit-bill/${booking.id}`}
+                        className="
     flex-1 flex items-center justify-center
     min-h-[42px]
     border border-brand-gold
@@ -380,63 +397,64 @@ const LatestBookings = () => {
     transition-all duration-300
     shadow-sm hover:shadow-md
     "
-                    >
-                      Edit
-                    </Link>
+                      >
+                        Edit
+                      </Link>
 
 
-                    {/* DELETE */}
-                    <button
-                      onClick={() => {
-                        setDeleteId(booking.id);
-                        setShowDeleteModal(true);
-                      }}
-                      disabled={deletingId === booking.id}
-                      className={`
+                      {/* DELETE */}
+                      <button
+                        onClick={() => {
+                          setDeleteId(booking.id);
+                          setShowDeleteModal(true);
+                        }}
+                        disabled={deletingId === booking.id}
+                        className={`
     px-3 flex items-center justify-center
     min-h-[42px]
     rounded-full border border-red-300
     transition-all duration-300
     ${deletingId === booking.id
-                          ? "bg-red-100 text-red-400 cursor-not-allowed"
-                          : "text-red-500 hover:bg-red-500 hover:text-white"
-                        }
+                            ? "bg-red-100 text-red-400 cursor-not-allowed"
+                            : "text-red-500 hover:bg-red-500 hover:text-white"
+                          }
     `}
-                    >
+                      >
 
-                      {deletingId === booking.id ? (
+                        {deletingId === booking.id ? (
 
-                        <span className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></span>
+                          <span className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></span>
 
-                      ) : (
+                        ) : (
 
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 7h12M9 7v10m6-10v10M10 3h4m-7 4h14l-1 13H5L4 7z"
-                          />
-                        </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 7h12M9 7v10m6-10v10M10 3h4m-7 4h14l-1 13H5L4 7z"
+                            />
+                          </svg>
 
-                      )}
+                        )}
 
-                    </button>
+                      </button>
+
+                    </div>
 
                   </div>
+                );
+              })}
 
-                </div>
-              );
-            })}
-
-          </div>
-        )}
+            </div>
+          )
+        }
       </div>
       <DeleteConfirmModal
         open={showDeleteModal}
