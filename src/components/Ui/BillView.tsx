@@ -21,6 +21,7 @@ interface Bill {
     service: string;
     makeup_type: string;
     price: number;
+    serviceDate: string
   }[];
   payment_mode?: string
   total_package: number;
@@ -417,32 +418,73 @@ const BillView = () => {
               {bill.services?.map((service, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition"
+                  className="
+      relative
+      p-5
+      rounded-2xl
+      bg-white
+      border border-brand-blush
+      shadow-sm
+      hover:shadow-lg
+      transition
+      overflow-hidden
+    "
                 >
 
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose">
-                    <Sparkles size={18} />
-                  </div>
+                  {/* subtle gold glow */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08),transparent_70%)] pointer-events-none"></div>
 
-                  <div className="flex-1">
+                  <div className="flex items-start gap-4">
 
-                    {/* Service label */}
-                    <p className="text-xs text-gray-500">
-                      {index === 0 ? "Primary Service" : `Service ${index + 1}`}
-                    </p>
+                    {/* Icon */}
+                    <div className="w-11 h-11 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose shadow-sm">
+                      <Sparkles size={18} />
+                    </div>
 
-                    <p className="font-semibold text-gray-800">
-                      {service.service}
-                    </p>
+                    {/* Content */}
+                    <div className="flex-1">
 
-                    <p className="text-sm text-gray-500">
-                      {service.makeup_type}
-                    </p>
+                      <p className="text-xs text-gray-500 mb-1">
+                        {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+                      </p>
 
-                  </div>
+                      <p className="font-semibold text-gray-800 text-base">
+                        {service.service}
+                      </p>
 
-                  <div className="text-sm font-semibold text-brand-rose">
-                    {formatCurrency(service.price)}
+                      <p className="text-sm text-gray-500">
+                        {service.makeup_type}
+                      </p>
+
+                      {/* Service Date */}
+                      {service.serviceDate && (
+                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                          <Calendar size={14} className="text-brand-rose" />
+                          <span>
+                            {new Date(service.serviceDate).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {/* Price */}
+                    <div className="text-right">
+
+                      <div className="text-xs text-gray-400 mb-1">
+                        Price
+                      </div>
+
+                      <div className="text-sm font-semibold text-brand-rose">
+                        {formatCurrency(service.price)}
+                      </div>
+
+                    </div>
+
                   </div>
 
                 </div>

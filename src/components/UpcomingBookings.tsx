@@ -170,61 +170,113 @@ Looking forward to making your day even more beautiful
             const status = getBookingStatus(booking.date);
 
             return (
-
               <div
                 key={booking.id}
                 className={`
-      bg-white/90
-      backdrop-blur-sm
-      border
-      rounded-3xl
-      p-6
-      shadow-md
-      hover:shadow-[0_15px_40px_rgba(0,0,0,0.12)]
-      hover:-translate-y-[2px]
-      transition-all duration-300
-      ${status === "today"
+  relative
+  bg-white/90
+  backdrop-blur-sm
+  border
+  rounded-3xl
+  p-6
+  shadow-md
+  hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]
+  transition-all duration-300
+  ${status === "today"
                     ? "border-yellow-300 bg-yellow-50/40"
                     : "border-brand-blush"}
-    `}
+`}
               >
 
+                {/* subtle luxury glow */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08),transparent_70%)] pointer-events-none"></div>
+
                 {/* HEADER */}
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex justify-between items-start mb-5">
 
                   <div>
                     <h3 className="text-lg font-semibold text-brand-text">
                       {booking.name}
                     </h3>
 
-                    <div className="text-sm text-gray-500 mt-1 space-y-[2px]">
-
-                      {booking.services?.map((s, i) => (
-                        <p key={i}>
-                          {i === 0 ? "Primary: " : ""}
-                          {s.service} — {s.makeup_type}
-                        </p>
-                      ))}
-
-                    </div>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Client Booking
+                    </p>
                   </div>
 
-                  <span className={`
-          px-3 py-1 text-xs rounded-full font-medium shadow-sm
-          ${status === "today"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : status === "tomorrow"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-brand-blush text-brand-rose"}
-        `}>
+                  <span
+                    className={`
+      px-3 py-1 text-xs rounded-full font-medium shadow-sm
+      ${status === "today"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : status === "tomorrow"
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-brand-blush text-brand-rose"}
+    `}
+                  >
                     {getStatusLabel(status)}
                   </span>
 
                 </div>
 
 
+                {/* SERVICES */}
+                <div className="space-y-3 mb-5">
+
+                  {booking.services?.map((s, i) => (
+
+                    <div
+                      key={i}
+                      className="
+        flex items-center justify-between
+        p-3 rounded-xl
+        border border-brand-blush
+        bg-white
+        shadow-sm
+      "
+                    >
+
+                      <div className="flex items-start gap-3">
+
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
+                          ✦
+                        </div>
+
+                        <div>
+
+                          <p className="text-sm font-semibold text-gray-800">
+                            {i === 0 ? "Primary Service" : `Service ${i + 1}`}
+                          </p>
+
+                          <p className="text-sm text-gray-600">
+                            {s.service} — {s.makeup_type}
+                          </p>
+
+                          {/* SERVICE DATE */}
+                          {s.serviceDate && (
+                            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                              <CalendarDays size={13} className="text-brand-rose" />
+                              {s.serviceDate}
+                            </div>
+                          )}
+
+                        </div>
+
+                      </div>
+
+                      <div className="text-sm font-semibold text-brand-rose">
+                        ₹{s.price}
+                      </div>
+
+                    </div>
+
+                  ))}
+
+                </div>
+
+
                 {/* DATE + TIME */}
-                <div className="flex items-center gap-6 text-sm text-gray-600 mb-5">
+                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-6">
 
                   <div className="flex items-center gap-2">
                     <CalendarDays size={16} className="text-brand-rose" />
@@ -240,23 +292,23 @@ Looking forward to making your day even more beautiful
 
 
                 {/* ACTIONS */}
-                <div className="flex gap-3 flex-wrap">
+                <div className="flex flex-col sm:flex-row gap-3">
 
                   {/* VIEW */}
                   <Link
                     to={`/view-bill/${booking.id}`}
                     className="
-          flex-1
-          flex items-center justify-center gap-2
-          rounded-full
-          border border-brand-gold
-          text-brand-gold
-          py-2.5
-          text-sm font-medium
-          hover:bg-brand-gold hover:text-white
-          shadow-sm hover:shadow-md
-          transition
-        "
+                    flex-1
+                    flex items-center justify-center gap-2
+                    rounded-full
+                    border border-brand-gold
+                    text-brand-gold
+                    py-2.5
+                    text-sm font-medium
+                    hover:bg-brand-gold hover:text-white
+                    shadow-sm hover:shadow-md
+                    transition
+                  "
                   >
                     <Eye size={16} />
                     View
@@ -267,16 +319,16 @@ Looking forward to making your day even more beautiful
                   <button
                     onClick={() => handleCall(booking)}
                     className="
-          flex-1
-          flex items-center justify-center gap-2
-          rounded-full
-          bg-gradient-to-r from-brand-rose to-pink-500
-          text-white
-          py-2.5
-          text-sm font-medium
-          shadow-sm hover:shadow-lg
-          transition
-        "
+      flex-1
+      flex items-center justify-center gap-2
+      rounded-full
+      bg-gradient-to-r from-brand-rose to-pink-500
+      text-white
+      py-2.5
+      text-sm font-medium
+      shadow-sm hover:shadow-lg
+      transition
+    "
                   >
                     {loadingId === booking.id ? (
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -289,21 +341,21 @@ Looking forward to making your day even more beautiful
                   </button>
 
 
-                  {/* WHATSAPP REMINDER */}
+                  {/* WHATSAPP */}
                   <button
                     onClick={() => handleWhatsApp(booking)}
                     className="
-          flex-1
-          flex items-center justify-center gap-2
-          rounded-full
-          bg-green-500
-          text-white
-          py-2.5
-          text-sm font-medium
-          shadow-sm hover:shadow-lg
-          hover:bg-green-600
-          transition
-        "
+                        flex-1
+                        flex items-center justify-center gap-2
+                        rounded-full
+                        bg-green-500
+                        text-white
+                        py-2.5
+                        text-sm font-medium
+                        shadow-sm hover:shadow-lg
+                        hover:bg-green-600
+                        transition
+                      "
                   >
                     {loadingId === booking.id ? (
                       <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

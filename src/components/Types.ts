@@ -13,6 +13,7 @@ export type Bill = {
     service: string;
     makeup_type: string;
     price: number | string;
+    serviceDate: string;
   }[];
   makeup_type?: string
 
@@ -35,6 +36,7 @@ export type ServiceItem = {
   service: string;
   makeup_type: string;
   price: string;
+  serviceDate: string;
 };
 
 export type BillForm = {

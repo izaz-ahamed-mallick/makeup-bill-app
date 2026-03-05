@@ -28,7 +28,7 @@ const CreateBill = () => {
     control,
   } = useForm<BillForm>({
     defaultValues: {
-      services: [{ service: "", makeup_type: "", price: "" }],
+      services: [{ service: "", makeup_type: "", price: "", serviceDate: "" }],
     },
   });
 
@@ -253,12 +253,21 @@ const CreateBill = () => {
               ))}
             </div>
 
-            {/* Price */}
-            <PremiumInput
-              label="Package Price"
-              register={register(`services.${index}.price` as const)}
-              currency
-            />
+            <div className="flex flex-col gap-3">
+              <PremiumInput
+                label="Service Date"
+                type="date"
+                register={register(`services.${index}.serviceDate` as const)}
+
+              />
+
+              {/* Price */}
+              <PremiumInput
+                label="Package Price"
+                register={register(`services.${index}.price` as const)}
+                currency
+              />
+            </div>
 
             {/* Remove button */}
             {fields.length > 1 && index > 0 && (
@@ -278,7 +287,7 @@ const CreateBill = () => {
         <div className="flex justify-center mb-12">
           <button
             type="button"
-            onClick={() => append({ service: "", makeup_type: "", price: "" })}
+            onClick={() => append({ service: "", makeup_type: "", price: "", serviceDate: "" })}
             className="bg-brand-rose hover:bg-brand-rose/90 text-white px-8 py-3 rounded-full font-medium transition"
           >
             + Add Another Service

@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     width: "48%",
     border: "1px solid #f5cbd8",
     borderRadius: 8,
-    padding: 3,
+    paddingVertical: 6,
+    paddingHorizontal: 3,
     marginBottom: 3
   },
 
@@ -138,7 +139,8 @@ const styles = StyleSheet.create({
     width: "100%",
     border: "1px solid #f5cbd8",
     borderRadius: 8,
-    padding: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
     marginBottom: 4
   },
 
@@ -408,7 +410,12 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
               </View>
 
               <View style={styles.card}>
+
                 <Text style={styles.label}>Booking Date</Text>
+                <Image
+                  src="/calender.png"
+                  style={{ width: 8, height: 8, marginRight: 3 }}
+                />
                 <Text style={styles.value}>{bill.date}</Text>
               </View>
 
@@ -450,19 +457,50 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                     }}
                   >
 
-                    <View>
+                    {/* SERVICE INFO */}
+                    <View style={{ flexDirection: "column" }}>
+
                       <Text style={{ fontSize: 10, fontWeight: "bold" }}>
                         {service.service}
                       </Text>
 
-                      <Text style={{ fontSize: 8, color: "#666" }}>
+                      <Text style={{ fontSize: 8, color: "#666", marginTop: 1 }}>
                         {service.makeup_type}
                       </Text>
+
+                      {/* SERVICE DATE */}
+                      {service.serviceDate && (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            marginTop: 3
+                          }}
+                        >
+                          <Image
+                            src="/calender.png"
+                            style={{ width: 8, height: 8, marginRight: 3 }}
+                          />
+
+                          <Text style={{ fontSize: 8, color: "#555" }}>
+                            {service.serviceDate}
+                          </Text>
+                        </View>
+                      )}
+
                     </View>
 
+                    {/* PRICE */}
                     <View style={styles.priceRow}>
                       <Image src="/rupee.png" style={styles.rupeeIcon} />
-                      <Text style={{ fontSize: 10, fontWeight: "bold", color: "#e11d48" }}>
+
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: "bold",
+                          color: "#e11d48"
+                        }}
+                      >
                         {service.price}
                       </Text>
                     </View>
@@ -473,6 +511,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
 
               ))}
 
+              {/* PAYMENT MODE */}
               <View style={styles.cardFull}>
                 <Text style={styles.label}>Payment Mode</Text>
                 <Text style={styles.value}>{bill.payment_mode}</Text>
