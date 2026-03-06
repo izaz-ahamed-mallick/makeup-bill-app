@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, Phone, Eye, MessageCircle, MapPin, Sparkles } from "lucide-react";
+import { CalendarDays, Clock, Phone, Eye, MessageCircle, MapPin, Sparkles, Navigation } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Bill } from "./Types";
@@ -96,6 +96,11 @@ Looking forward to making your day even more beautiful
     if (status === "today") return "Today";
     if (status === "tomorrow") return "Tomorrow";
     return "Upcoming";
+  };
+  const openDirections = (location: string) => {
+    const encoded = encodeURIComponent(location);
+    const url = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+    window.open(url, "_blank");
   };
 
   if (loading) {
@@ -275,9 +280,30 @@ Looking forward to making your day even more beautiful
                               )}
 
                               {s.location && (
-                                <div className="flex items-center gap-1">
-                                  <MapPin size={13} className="text-brand-rose" />
-                                  {s.location}
+                                <div className="flex items-center gap-2 mt-2">
+
+                                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                                    <MapPin size={13} className="text-brand-rose" />
+                                    {s.location}
+                                  </div>
+
+                                  <button
+                                    onClick={() => openDirections(s.location)}
+                                    className="
+        flex items-center gap-1
+        text-xs
+        px-2 py-1
+        rounded-full
+        bg-brand-rose/10
+        text-brand-rose
+        hover:bg-brand-rose hover:text-white
+        transition
+      "
+                                  >
+                                    <Navigation size={12} />
+                                    Directions
+                                  </button>
+
                                 </div>
                               )}
 
