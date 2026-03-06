@@ -331,9 +331,9 @@ const CreateBill = () => {
             </div>
 
             {/* DATE + TIME */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-5 mb-6">
 
-              <div className="w-full min-w-0">
+              <div className="col-span-2 md:col-span-1">
                 <PremiumInput
                   label="Service Date"
                   type="date"
@@ -342,7 +342,7 @@ const CreateBill = () => {
                 />
               </div>
 
-              <div className="w-full min-w-0">
+              <div className="col-span-2 md:col-span-1">
                 <PremiumInput
                   label="Service Time"
                   type="time"

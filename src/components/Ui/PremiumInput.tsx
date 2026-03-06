@@ -37,7 +37,7 @@ const PremiumInput = ({
         readOnly={readOnly}
         style={style}
         placeholder={isPicker ? undefined : " "}
-        className={`
+        className={`appearance-none
   peer w-full
   min-h-[56px]
   rounded-2xl
