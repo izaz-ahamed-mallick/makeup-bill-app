@@ -20,8 +20,10 @@ interface Bill {
   services: {
     service: string;
     makeup_type: string;
-    price: number;
-    serviceDate: string
+    price: number | string;
+    serviceDate: string;
+    location: string;
+    serviceTime: string;
   }[];
   payment_mode?: string
   total_package: number;
@@ -456,19 +458,61 @@ const BillView = () => {
                         {service.makeup_type}
                       </p>
 
-                      {/* Service Date */}
-                      {service.serviceDate && (
-                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                          <Calendar size={14} className="text-brand-rose" />
-                          <span>
+                      {/* Service Meta Info */}
+                      <div className="flex flex-col gap-1 mt-2 text-sm text-gray-600">
+
+                        {service.serviceDate && (
+                          <div className="flex items-center gap-2">
+                            <Calendar size={14} className="text-brand-rose" />
                             {new Date(service.serviceDate).toLocaleDateString("en-IN", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
                             })}
-                          </span>
-                        </div>
-                      )}
+                          </div>
+                        )}
+
+                        {service.serviceTime && (
+                          <div className="flex items-center gap-2">
+                            <Clock size={14} className="text-brand-rose" />
+                            {service.serviceTime}
+                          </div>
+                        )}
+
+                        {service.location && (
+                          <div className="flex items-center gap-2">
+
+                            <MapPin size={14} className="text-brand-rose" />
+
+                            <span className="flex-1">{service.location}</span>
+
+                            {/* Google Maps button */}
+                            <button
+                              onClick={() => {
+                                const encoded = encodeURIComponent(service.location);
+                                window.open(
+                                  `https://www.google.com/maps/dir/?api=1&destination=${encoded}`,
+                                  "_blank"
+                                );
+                              }}
+                              className="
+                                  flex items-center gap-1
+                                  text-xs
+                                  px-2 py-1
+                                  rounded-full
+                                  bg-brand-rose/10
+                                  text-brand-rose
+                                  hover:bg-brand-rose hover:text-white
+                                  transition
+                                "
+                            >
+                              Directions
+                            </button>
+
+                          </div>
+                        )}
+
+                      </div>
 
                     </div>
 
@@ -480,7 +524,7 @@ const BillView = () => {
                       </div>
 
                       <div className="text-sm font-semibold text-brand-rose">
-                        {formatCurrency(service.price)}
+                        {formatCurrency(Number(service.price))}
                       </div>
 
                     </div>

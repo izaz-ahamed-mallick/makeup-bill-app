@@ -16,6 +16,10 @@ Font.register({
   family: "GreatVibes",
   src: "/fonts/GreatVibes-Regular.ttf",
 });
+Font.register({
+  family: "PlayfairDisplay",
+  src: "/fonts/PlayfairDisplay.ttf",
+});
 const styles = StyleSheet.create({
 
   page: {
@@ -37,9 +41,9 @@ const styles = StyleSheet.create({
   watermark: {
     position: "absolute",
     opacity: 0.04,
-    width: 350,
+    width: 450,
     top: 200,
-    left: 120
+    left: 75
   },
 
   /* HEADER */
@@ -59,25 +63,25 @@ const styles = StyleSheet.create({
     border: "3px solid #facc15",
     marginBottom: 3
   },
-
   brand: {
     fontSize: 22,
     color: "#ffd700",
-    fontWeight: "bold"
+    fontFamily: "PlayfairDisplay",
+    letterSpacing: 1.5,
   },
-
   tagline: {
-    marginTop: 2,
+    marginTop: 3,
     fontSize: 8,
-    color: "#fff"
+    color: "#fff",
+    letterSpacing: 1,
   },
 
   location: {
     fontSize: 7,
     color: "#fff",
-    marginTop: 1
+    marginTop: 2,
+    letterSpacing: 0.5
   },
-
   contactRow: {
     flexDirection: "row",
     marginTop: 4
@@ -360,7 +364,15 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
             <Image src="/logo.png" style={styles.logo} />
 
             <Text style={styles.brand}>Puja's Touch</Text>
-
+            <View
+              style={{
+                width: 80,
+                height: 1,
+                backgroundColor: "#ffd700",
+                marginTop: 2,
+                marginBottom: 2
+              }}
+            />
             <Text style={styles.tagline}>
               Luxury Bridal Makeup Artist
             </Text>
@@ -469,6 +481,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                       </Text>
 
                       {/* SERVICE DATE */}
+                      {/* SERVICE DATE */}
                       {service.serviceDate && (
                         <View
                           style={{
@@ -484,6 +497,46 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
 
                           <Text style={{ fontSize: 8, color: "#555" }}>
                             {service.serviceDate}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* SERVICE TIME */}
+                      {service.serviceTime && (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            marginTop: 2
+                          }}
+                        >
+                          <Image
+                            src="/clock.png"
+                            style={{ width: 8, height: 8, marginRight: 3 }}
+                          />
+
+                          <Text style={{ fontSize: 8, color: "#555" }}>
+                            {service.serviceTime}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* SERVICE LOCATION */}
+                      {service.location && (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            marginTop: 2
+                          }}
+                        >
+                          <Image
+                            src="/location.png"
+                            style={{ width: 8, height: 8, marginRight: 3 }}
+                          />
+
+                          <Text style={{ fontSize: 8, color: "#555" }}>
+                            {service.location}
                           </Text>
                         </View>
                       )}
