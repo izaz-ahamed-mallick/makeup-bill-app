@@ -216,45 +216,122 @@ const CreateBill = () => {
         <SectionHeader title="Services" />
 
         {fields.map((field, index) => (
-          <div key={field.id} className="border rounded-xl p-6 mb-6 bg-white">
+          <div
+            key={field.id}
+            className="
+    relative
+    border border-brand-blush
+    rounded-2xl
+    bg-white
+    p-5 sm:p-7
+    mb-8
+    shadow-sm
+    hover:shadow-md
+    transition-all duration-300
+  "
+          >
 
-            {/* Service title */}
-            <h3 className="font-semibold text-brand-rose mb-6 text-lg">
-              {index === 0 ? "Primary Service" : `Service ${index + 1}`}
-            </h3>
+            {/* glow */}
+            <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.06),transparent_70%)] pointer-events-none"></div>
 
-            {/* Service Selection */}
-            <p className="text-sm text-gray-500 mb-3 font-medium">Select Service</p>
+            {/* HEADER */}
+            <div className="flex items-center justify-between mb-6">
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {["Bridal", "Reception", "Semi Bridal", "Party Makeup"].map((s) => (
-                <PremiumRadio
-                  key={s}
-                  label={s}
-                  value={s}
-                  register={register(`services.${index}.service` as const)}
-                />
-              ))}
+              <div className="flex items-center gap-3">
+
+                <div className="
+          w-8 h-8 sm:w-9 sm:h-9
+          rounded-full
+          bg-brand-blush
+          flex items-center justify-center
+          text-brand-rose
+          text-xs font-semibold
+        ">
+                  {index + 1}
+                </div>
+
+                <h3 className="font-semibold text-brand-rose text-base sm:text-lg">
+                  {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+                </h3>
+
+              </div>
+
+              {fields.length > 1 && index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="
+          text-xs
+          px-3 py-1.5
+          rounded-full
+          border border-red-200
+          text-red-500
+          hover:bg-red-50
+          transition
+        "
+                >
+                  Remove
+                </button>
+              )}
+
             </div>
 
-            {/* Makeup Type */}
-            <p className="text-sm text-gray-500 mb-3 font-medium">
-              Makeup Type
-            </p>
+            {/* SERVICE TYPE */}
+            <div className="mb-8">
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {["HD", "NON HD", "Waterproof", "Sweatproof & Waterproof"].map((type) => (
-                <PremiumRadio
-                  key={type}
-                  label={type}
-                  value={type}
-                  register={register(`services.${index}.makeup_type` as const)}
-                />
-              ))}
+              <p className="text-sm text-gray-500 font-medium mb-4">
+                Select Service
+              </p>
+
+              <div className="
+        grid
+        grid-cols-2
+        sm:grid-cols-4
+        gap-3 sm:gap-4
+      ">
+
+                {["Bridal", "Reception", "Semi Bridal", "Party Makeup"].map((s) => (
+                  <PremiumRadio
+                    key={s}
+                    label={s}
+                    value={s}
+                    register={register(`services.${index}.service` as const)}
+                  />
+                ))}
+
+              </div>
+
             </div>
 
+            {/* MAKEUP TYPE */}
+            <div className="mb-8">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <p className="text-sm text-gray-500 font-medium mb-4">
+                Makeup Type
+              </p>
+
+              <div className="
+        grid
+        grid-cols-2
+        sm:grid-cols-4
+        gap-3 sm:gap-4
+      ">
+
+                {["HD", "NON HD", "Waterproof", "Sweatproof & Waterproof"].map((type) => (
+                  <PremiumRadio
+                    key={type}
+                    label={type}
+                    value={type}
+                    register={register(`services.${index}.makeup_type` as const)}
+                  />
+                ))}
+
+              </div>
+
+            </div>
+
+            {/* DATE + TIME */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
 
               <PremiumInput
                 label="Service Date"
@@ -268,35 +345,27 @@ const CreateBill = () => {
                 register={register(`services.${index}.serviceTime` as const)}
               />
 
+            </div>
+
+            {/* LOCATION */}
+            <div className="mb-6">
+
               <PremiumInput
                 label="Service Location"
                 register={register(`services.${index}.location` as const)}
-                className="md:col-span-2"
-              />
-
-              <PremiumInput
-                label="Package Price"
-                register={register(`services.${index}.price` as const)}
-                currency
-                className="md:col-span-2"
               />
 
             </div>
 
-            {/* Remove button */}
-            {fields.length > 1 && index > 0 && (
-              <button
-                type="button"
-                onClick={() => remove(index)}
-                className="text-red-500 mt-4 text-sm"
-              >
-                Remove Service
-              </button>
-            )}
+            {/* PRICE */}
+            <PremiumInput
+              label="Package Price"
+              register={register(`services.${index}.price` as const)}
+              currency
+            />
 
           </div>
         ))}
-
         {/* Add Service button */}
         <div className="flex justify-center mb-12">
           <button
