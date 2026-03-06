@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { formatCurrency } from "../formatCurrency";
 import { supabase } from "../../lib/supabase";
-import { User, Phone, MapPin, Calendar, Clock, Facebook, MessageCircle, Download, CreditCard, Sparkles, IndianRupee, Banknote, Tag, Wallet } from "lucide-react";
+import { User, Phone, MapPin, Calendar, Clock, Facebook, MessageCircle, Download, Sparkles, IndianRupee, Banknote, Tag, Wallet } from "lucide-react";
 
 import BackButton from "./BackButton";
 import BillViewLoader from "../Loader/BillViewLoader";
