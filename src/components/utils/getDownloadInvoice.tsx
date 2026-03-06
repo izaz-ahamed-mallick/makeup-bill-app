@@ -46,48 +46,24 @@ export const getDownloadInvoice = async (
 
 export const sendInvoiceWhatsapp = (bill: Bill) => {
   try {
-    const invoiceNumber = generateInvoiceNumber(Number(bill?.id ?? 0));
-
-    const discount = Number(bill.discount ?? 0);
-    const advance = Number(bill.advanced ?? 0);
-
-    const paymentStatus = bill.full_payment
-      ? "Payment Status: Completed"
-      : "Payment Status: Pending";
-
-    const servicesText = bill.services
-      ?.map((s) => `• ${s.service} (${s.makeup_type})`)
-      .join("\n") || "Service not specified";
     const message = `
 Hello ${bill.name},
 
-*Puja's Touch – Luxury Bridal Makeup*
+Greetings from *Puja's Touch – Luxury Bridal Makeup Artist*
 
-Your booking invoice details are below.
+Your booking invoice has been attached with this message.
 
-━━━━━━━━━━━━━━━━
-*Invoice No:* ${invoiceNumber}
+Please review the invoice for the complete service and payment details.
 
- *Services*
-${servicesText}
+If you have any questions, feel free to contact us.
 
- *Total Package:* ₹${bill.total_package}
- *Discount:* ₹${discount}
- *Advance Paid:* ₹${advance}
- *Due Amount:* ₹${bill.due}
-
-${paymentStatus}
-
-━━━━━━━━━━━━━━━━
-
-Thank you for trusting *Puja's Touch*
+Thank you for choosing *Puja's Touch*.
 We look forward to making your special day even more beautiful.
 
 Warm regards,
 *Puja's Touch*
 Luxury Bridal Makeup Artist
 `;
-
     const encoded = encodeURIComponent(message);
 
     const whatsappUrl = `https://wa.me/91${bill.phone}?text=${encoded}`;
