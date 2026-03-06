@@ -1,9 +1,10 @@
-import { CalendarDays, Clock, Phone, Eye, MessageCircle } from "lucide-react";
+import { CalendarDays, Clock, Phone, Eye, MessageCircle, MapPin, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Bill } from "./Types";
 import { supabase } from "../lib/supabase";
 import BackButton from "./Ui/BackButton";
+import { formatCurrency } from "./formatCurrency";
 
 const UpcomingBookings = () => {
 
@@ -221,51 +222,84 @@ Looking forward to making your day even more beautiful
 
 
                 {/* SERVICES */}
-                <div className="space-y-3 mb-5">
+                <div className="space-y-3 mb-6">
 
                   {booking.services?.map((s, i) => (
 
                     <div
                       key={i}
                       className="
-        flex items-center justify-between
-        p-3 rounded-xl
+        p-4 rounded-2xl
         border border-brand-blush
         bg-white
         shadow-sm
+        hover:shadow-md
+        transition
       "
                     >
 
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start justify-between gap-4">
 
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
-                          ✦
-                        </div>
+                        {/* LEFT */}
+                        <div className="flex items-start gap-3">
 
-                        <div>
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
+                            <Sparkles size={16} />
+                          </div>
 
-                          <p className="text-sm font-semibold text-gray-800">
-                            {i === 0 ? "Primary Service" : `Service ${i + 1}`}
-                          </p>
+                          <div>
 
-                          <p className="text-sm text-gray-600">
-                            {s.service} — {s.makeup_type}
-                          </p>
+                            <p className="text-sm font-semibold text-gray-800">
+                              {i === 0 ? "Primary Service" : `Service ${i + 1}`}
+                            </p>
 
-                          {/* SERVICE DATE */}
-                          {s.serviceDate && (
-                            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-                              <CalendarDays size={13} className="text-brand-rose" />
-                              {s.serviceDate}
+                            <p className="text-sm text-gray-600">
+                              {s.service} — {s.makeup_type}
+                            </p>
+
+                            {/* META INFO */}
+                            <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-500">
+
+                              {s.serviceDate && (
+                                <div className="flex items-center gap-1">
+                                  <CalendarDays size={13} className="text-brand-rose" />
+                                  {s.serviceDate}
+                                </div>
+                              )}
+
+                              {s.serviceTime && (
+                                <div className="flex items-center gap-1">
+                                  <Clock size={13} className="text-brand-rose" />
+                                  {s.serviceTime}
+                                </div>
+                              )}
+
+                              {s.location && (
+                                <div className="flex items-center gap-1">
+                                  <MapPin size={13} className="text-brand-rose" />
+                                  {s.location}
+                                </div>
+                              )}
+
                             </div>
-                          )}
+
+                          </div>
 
                         </div>
 
-                      </div>
+                        {/* PRICE */}
+                        <div className="text-right">
 
-                      <div className="text-sm font-semibold text-brand-rose">
-                        ₹{s.price}
+                          <p className="text-xs text-gray-400">
+                            Price
+                          </p>
+
+                          <p className="text-sm font-semibold text-brand-rose">
+                            {formatCurrency(Number(s.price))}
+                          </p>
+
+                        </div>
+
                       </div>
 
                     </div>
@@ -273,7 +307,6 @@ Looking forward to making your day even more beautiful
                   ))}
 
                 </div>
-
 
                 {/* DATE + TIME */}
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-6">
