@@ -1,43 +1,44 @@
-import { CalendarDays, Clock, Phone, Eye, MessageCircle, MapPin, Sparkles, Navigation } from "lucide-react";
+import {
+  CalendarDays,
+  Clock,
+  Phone,
+  Eye,
+  MessageCircle,
+  MapPin,
+  Sparkles,
+  Navigation
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Bill } from "./Types";
 import { supabase } from "../lib/supabase";
 import BackButton from "./Ui/BackButton";
 import { formatCurrency } from "./formatCurrency";
+import UpcomingLoader from "./Loader/UpcomingLoader";
 
 const UpcomingBookings = () => {
 
-
   const [bookings, setBookings] = useState<Bill[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [loadingId, setLoadingId] = useState<number | null>(null);
 
   const fetchBookings = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("bills")
       .select("*")
-      .gte("date", new Date().toISOString().split("T")[0]) // upcoming
+      .gte("date", new Date().toISOString().split("T")[0])
       .order("date", { ascending: true });
 
-    if (!error) {
-      setBookings(data || []);
-    }
-
+    setBookings(data || []);
     setLoading(false);
   };
 
   useEffect(() => {
-    const loadeBooking = async () => {
-      await fetchBookings();
-    }
-    loadeBooking()
+    fetchBookings();
   }, []);
 
-
-  const [loadingId, setLoadingId] = useState<number | null>(null);
   const handleCall = (booking: Bill) => {
     setLoadingId(booking.id);
 
@@ -60,100 +61,262 @@ This is a friendly reminder from *Puja's Touch – Luxury Bridal Makeup Artist*.
 Your makeup booking is scheduled for:
 
 Date: ${booking.date}
- Time: ${booking.time}
+Time: ${booking.time}
 
-I will arrive at your location at the scheduled time. Kindly ensure you are ready so we can begin smoothly.
+I will arrive at your location at the scheduled time.
 
 Thank you for choosing *Puja's Touch*.
-Looking forward to making your day even more beautiful
 
 — Puja's Touch`
     );
 
     window.open(`https://wa.me/91${booking.phone}?text=${message}`, "_blank");
-
     setLoadingId(null);
+  };
+
+  const openDirections = (location: string) => {
+    const encoded = encodeURIComponent(location);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encoded}`);
   };
 
   const getBookingStatus = (date: any) => {
     const today = new Date();
     const bookingDate = new Date(date);
 
-    const todayDate = today.toDateString();
-    const bookingDateStr = bookingDate.toDateString();
-
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
-    const tomorrowDate = tomorrow.toDateString();
 
-    if (bookingDateStr === todayDate) return "today";
-    if (bookingDateStr === tomorrowDate) return "tomorrow";
+    if (bookingDate.toDateString() === today.toDateString()) return "today";
+    if (bookingDate.toDateString() === tomorrow.toDateString()) return "tomorrow";
 
     return "upcoming";
   };
 
-  const getStatusLabel = (status: string) => {
-    if (status === "today") return "Today";
-    if (status === "tomorrow") return "Tomorrow";
-    return "Upcoming";
-  };
-  const openDirections = (location: string) => {
-    const encoded = encodeURIComponent(location);
-    const url = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
-    window.open(url, "_blank");
-  };
+  const todayBookings = bookings.filter(
+    (b) => getBookingStatus(b.date) === "today"
+  );
 
-  if (loading) {
+  const tomorrowBookings = bookings.filter(
+    (b) => getBookingStatus(b.date) === "tomorrow"
+  );
+
+  const upcomingBookings = bookings.filter(
+    (b) => getBookingStatus(b.date) === "upcoming"
+  );
+
+  /* BOOKING CARD */
+
+  const BookingCard = (booking: Bill) => {
+
+    const status = getBookingStatus(booking.date);
+
     return (
-      <div className="py-10 px-4 bg-brand-blush/20 min-h-screen">
-        <div className="max-w-4xl mx-auto space-y-5">
-          {[1, 2, 3].map((i) => (
+      <div
+        key={booking.id}
+        className={`
+        relative
+        bg-white/90
+        backdrop-blur-sm
+        border
+        rounded-3xl
+        p-6
+        shadow-md
+        hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]
+        hover:-translate-y-[2px]
+        transition-all duration-300
+        ${status === "today"
+            ? "border-yellow-300 bg-yellow-50/40"
+            : "border-brand-blush"}
+      `}
+      >
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08),transparent_70%)] pointer-events-none"></div>
+
+        {/* HEADER */}
+
+        <div className="flex justify-between mb-5">
+
+          <div>
+            <h3 className="text-lg font-semibold text-brand-text">
+              {booking.name}
+            </h3>
+
+            <p className="text-xs text-gray-400">
+              Client Booking
+            </p>
+          </div>
+
+        </div>
+
+        {/* SERVICES */}
+
+        <div className="space-y-3 mb-6">
+
+          {booking.services?.map((s, i) => (
+
             <div
               key={i}
-              className="bg-white rounded-2xl p-5 border border-brand-blush shadow-sm animate-pulse"
+              className="
+              p-4
+              rounded-2xl
+              border border-brand-blush
+              bg-white
+              shadow-sm
+              hover:shadow-lg
+              hover:border-brand-gold
+              transition
+            "
             >
-              <div className="flex justify-between mb-4">
-                <div className="space-y-2">
-                  <div className="h-4 w-32 bg-gray-200 rounded"></div>
-                  <div className="h-3 w-24 bg-gray-200 rounded"></div>
+
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+
+                <div className="flex gap-3">
+
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
+                    <Sparkles size={16} />
+                  </div>
+
+                  <div>
+
+                    <p className="text-sm font-semibold">
+                      {i === 0 ? "Primary Service" : `Service ${i + 1}`}
+                    </p>
+
+                    <p className="text-sm text-gray-600">
+                      {s.service} — {s.makeup_type}
+                    </p>
+
+                    <div className="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
+
+                      {s.serviceDate && (
+                        <div className="flex items-center gap-1">
+                          <CalendarDays size={13} />
+                          {s.serviceDate}
+                        </div>
+                      )}
+
+                      {s.serviceTime && (
+                        <div className="flex items-center gap-1">
+                          <Clock size={13} />
+                          {s.serviceTime}
+                        </div>
+                      )}
+
+                    </div>
+
+                    {s.location && (
+                      <div className="flex items-center gap-2 mt-2 flex-wrap">
+
+                        <div className="flex items-center gap-1 text-xs">
+                          <MapPin size={13} />
+                          {s.location}
+                        </div>
+
+                        <button
+                          onClick={() => openDirections(s.location)}
+                          className="
+                          flex items-center gap-1
+                          text-xs
+                          px-2 py-1
+                          rounded-full
+                          bg-brand-rose/10
+                          text-brand-rose
+                          hover:bg-brand-rose hover:text-white
+                        "
+                        >
+                          <Navigation size={12} />
+                          Directions
+                        </button>
+
+                      </div>
+                    )}
+
+                  </div>
+
                 </div>
 
-                <div className="h-6 w-16 bg-gray-200 rounded-full"></div>
+                <div className="text-sm font-semibold text-brand-rose">
+                  {formatCurrency(Number(s.price))}
+                </div>
+
               </div>
 
-              <div className="flex gap-6 mb-4">
-                <div className="h-3 w-20 bg-gray-200 rounded"></div>
-                <div className="h-3 w-20 bg-gray-200 rounded"></div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="h-9 flex-1 bg-gray-200 rounded-full"></div>
-                <div className="h-9 flex-1 bg-gray-200 rounded-full"></div>
-                <div className="h-9 flex-1 bg-gray-200 rounded-full"></div>
-              </div>
             </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
-  if (!bookings.length) {
-    return (
-      <div className="py-32 text-center text-gray-500">
-        No upcoming bookings
+          ))}
+
+        </div>
+
+        {/* ACTIONS */}
+
+        <div className="flex flex-col sm:flex-row gap-3">
+
+          <Link
+            to={`/view-bill/${booking.id}`}
+            className="
+            flex-1 flex items-center justify-center gap-2
+            rounded-full border border-brand-gold
+            text-brand-gold py-2.5 text-sm
+            hover:bg-brand-gold hover:text-white
+          "
+          >
+            <Eye size={16} />
+            View
+          </Link>
+
+          <button
+            onClick={() => handleCall(booking)}
+            className="
+            flex-1 flex items-center justify-center gap-2
+            rounded-full bg-gradient-to-r from-brand-rose to-pink-500
+            text-white py-2.5 text-sm
+          "
+          >
+            {loadingId === booking.id ? (
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            ) : (
+              <>
+                <Phone size={16} />
+                Call
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={() => handleWhatsApp(booking)}
+            className="
+            flex-1 flex items-center justify-center gap-2
+            rounded-full bg-green-500 text-white py-2.5 text-sm
+          "
+          >
+            <MessageCircle size={16} />
+            Reminder
+          </button>
+
+        </div>
+
       </div>
     );
+  };
+
+  /* SECTION */
+
+
+
+  if (loading) {
+    return <UpcomingLoader />;
   }
 
   return (
+
     <div className="py-10 px-4 bg-brand-blush/20 min-h-screen">
+
       <div className="mb-3">
         <BackButton />
       </div>
+
       <div className="max-w-4xl mx-auto">
 
-        {/* Header */}
         <div className="mb-10">
 
           <h1 className="text-3xl font-semibold text-brand-rose font-[Playfair_Display]">
@@ -168,277 +331,71 @@ Looking forward to making your day even more beautiful
 
         </div>
 
-        {/* Booking List */}
-        <div className="space-y-5">
+        <Section
+          title="Today"
+          data={todayBookings}
+          renderCard={BookingCard}
+        />
 
-          {bookings.map((booking: Bill) => {
+        <Section
+          title="Tomorrow"
+          data={tomorrowBookings}
+          renderCard={BookingCard}
+        />
 
-            const status = getBookingStatus(booking.date);
+        <Section
+          title="Upcoming"
+          data={upcomingBookings}
+          renderCard={BookingCard}
+        />
 
-            return (
-              <div
-                key={booking.id}
-                className={`
-  relative
-  bg-white/90
-  backdrop-blur-sm
-  border
-  rounded-3xl
-  p-6
-  shadow-md
-  hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]
-  transition-all duration-300
-  ${status === "today"
-                    ? "border-yellow-300 bg-yellow-50/40"
-                    : "border-brand-blush"}
-`}
-              >
+      </div>
 
-                {/* subtle luxury glow */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08),transparent_70%)] pointer-events-none"></div>
+    </div>
 
-                {/* HEADER */}
-                <div className="flex justify-between items-start mb-5">
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-brand-text">
-                      {booking.name}
-                    </h3>
-
-                    <p className="text-xs text-gray-400 mt-1">
-                      Client Booking
-                    </p>
-                  </div>
-
-                  <span
-                    className={`
-      px-3 py-1 text-xs rounded-full font-medium shadow-sm
-      ${status === "today"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : status === "tomorrow"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-brand-blush text-brand-rose"}
-    `}
-                  >
-                    {getStatusLabel(status)}
-                  </span>
-
-                </div>
+  );
+};
 
 
-                {/* SERVICES */}
-                <div className="space-y-3 mb-6">
+interface SectionProps {
+  title: string;
+  data: Bill[];
+  renderCard: (booking: Bill) => React.ReactNode;
+}
 
-                  {booking.services?.map((s, i) => (
+const Section = ({ title, data, renderCard }: SectionProps) => {
 
-                    <div
-                      key={i}
-                      className="
-        p-4 rounded-2xl
-        border border-brand-blush
-        bg-white
-        shadow-sm
-        hover:shadow-md
-        transition
-      "
-                    >
+  if (!data.length) return null;
 
-                      <div className="flex items-start justify-between gap-4">
+  return (
+    <div className="mb-12">
 
-                        {/* LEFT */}
-                        <div className="flex items-start gap-3">
+      <div className="sticky top-0 bg-brand-blush/20 backdrop-blur-md py-3 z-10">
 
-                          <div className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
-                            <Sparkles size={16} />
-                          </div>
+        <div className="flex items-center gap-3">
 
-                          <div>
+          <h2 className="text-lg font-semibold">
+            {title}
+          </h2>
 
-                            <p className="text-sm font-semibold text-gray-800">
-                              {i === 0 ? "Primary Service" : `Service ${i + 1}`}
-                            </p>
+          <div className="flex-1 h-[1px] bg-brand-blush"></div>
 
-                            <p className="text-sm text-gray-600">
-                              {s.service} — {s.makeup_type}
-                            </p>
-
-                            {/* META INFO */}
-                            <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-500">
-
-                              {s.serviceDate && (
-                                <div className="flex items-center gap-1">
-                                  <CalendarDays size={13} className="text-brand-rose" />
-                                  {s.serviceDate}
-                                </div>
-                              )}
-
-                              {s.serviceTime && (
-                                <div className="flex items-center gap-1">
-                                  <Clock size={13} className="text-brand-rose" />
-                                  {s.serviceTime}
-                                </div>
-                              )}
-
-                              {s.location && (
-                                <div className="flex items-center gap-2 mt-2">
-
-                                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                                    <MapPin size={13} className="text-brand-rose" />
-                                    {s.location}
-                                  </div>
-
-                                  <button
-                                    onClick={() => openDirections(s.location)}
-                                    className="
-        flex items-center gap-1
-        text-xs
-        px-2 py-1
-        rounded-full
-        bg-brand-rose/10
-        text-brand-rose
-        hover:bg-brand-rose hover:text-white
-        transition
-      "
-                                  >
-                                    <Navigation size={12} />
-                                    Directions
-                                  </button>
-
-                                </div>
-                              )}
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                        {/* PRICE */}
-                        <div className="text-right">
-
-                          <p className="text-xs text-gray-400">
-                            Price
-                          </p>
-
-                          <p className="text-sm font-semibold text-brand-rose">
-                            {formatCurrency(Number(s.price))}
-                          </p>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                  ))}
-
-                </div>
-
-                {/* DATE + TIME */}
-                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-6">
-
-                  <div className="flex items-center gap-2">
-                    <CalendarDays size={16} className="text-brand-rose" />
-                    {booking.date}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Clock size={16} className="text-brand-rose" />
-                    {booking.time}
-                  </div>
-
-                </div>
-
-
-                {/* ACTIONS */}
-                <div className="flex flex-col sm:flex-row gap-3">
-
-                  {/* VIEW */}
-                  <Link
-                    to={`/view-bill/${booking.id}`}
-                    className="
-                    flex-1
-                    flex items-center justify-center gap-2
-                    rounded-full
-                    border border-brand-gold
-                    text-brand-gold
-                    py-2.5
-                    text-sm font-medium
-                    hover:bg-brand-gold hover:text-white
-                    shadow-sm hover:shadow-md
-                    transition
-                  "
-                  >
-                    <Eye size={16} />
-                    View
-                  </Link>
-
-
-                  {/* CALL */}
-                  <button
-                    onClick={() => handleCall(booking)}
-                    className="
-      flex-1
-      flex items-center justify-center gap-2
-      rounded-full
-      bg-gradient-to-r from-brand-rose to-pink-500
-      text-white
-      py-2.5
-      text-sm font-medium
-      shadow-sm hover:shadow-lg
-      transition
-    "
-                  >
-                    {loadingId === booking.id ? (
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    ) : (
-                      <>
-                        <Phone size={16} />
-                        Call
-                      </>
-                    )}
-                  </button>
-
-
-                  {/* WHATSAPP */}
-                  <button
-                    onClick={() => handleWhatsApp(booking)}
-                    className="
-                        flex-1
-                        flex items-center justify-center gap-2
-                        rounded-full
-                        bg-green-500
-                        text-white
-                        py-2.5
-                        text-sm font-medium
-                        shadow-sm hover:shadow-lg
-                        hover:bg-green-600
-                        transition
-                      "
-                  >
-                    {loadingId === booking.id ? (
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    ) : (
-                      <>
-                        <MessageCircle size={16} />
-                        Reminder
-                      </>
-                    )}
-                  </button>
-
-                </div>
-
-              </div>
-
-            );
-          })}
+          <span className="text-xs text-gray-400">
+            {data.length}
+          </span>
 
         </div>
 
       </div>
 
+      <div className="space-y-5 mt-5">
+        {data.map((b) => renderCard(b))}
+      </div>
+
     </div>
   );
 };
+
+
 
 export default UpcomingBookings;

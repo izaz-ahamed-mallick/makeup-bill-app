@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     marginBottom: 3
   },
   brand: {
-    fontSize: 22,
+    fontSize: 24,
     color: "#ffd700",
     fontFamily: "PlayfairDisplay",
     letterSpacing: 1.5,
