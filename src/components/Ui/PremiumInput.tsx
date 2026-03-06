@@ -7,7 +7,7 @@ interface Props {
   className?: string;
   readOnly?: boolean;
   currency?: boolean;
-  style?: any
+  style?: any;
 }
 
 const PremiumInput = ({
@@ -19,8 +19,11 @@ const PremiumInput = ({
   currency = false,
   style
 }: Props) => {
+
+  const isDateOrTime = type === "date" || type === "time";
+
   return (
-    <div className={`relative  ${className}`}>
+    <div className={`relative w-full ${className}`}>
 
       {/* Currency Symbol */}
       {currency && (
@@ -34,24 +37,42 @@ const PremiumInput = ({
         {...register}
         readOnly={readOnly}
         style={style}
-        placeholder=" "
-        className={`peer w-full min-h-[56px] rounded-2xl border border-brand-blush bg-white/70
+        placeholder={isDateOrTime ? undefined : " "}
+        className={`
+        peer w-full
+        min-h-[56px]
+        rounded-2xl
+        border border-brand-blush
+        bg-white/70
         ${currency ? "pl-7" : "pl-4"}
-        pt-6 pb-2 text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-rose
-        transition-all duration-300 `}
+        ${isDateOrTime ? "pt-6 pb-2" : "pt-6 pb-2"}
+        text-brand-text
+        focus:outline-none
+        focus:ring-2
+        focus:ring-brand-rose
+        transition-all
+      `}
       />
 
       <label
-        className={`absolute ${currency ? "left-4 " : "left-4"} top-2 text-sm text-gray-400 transition-all
-       peer-placeholder-shown:top-1
-        peer-placeholder-shown:text-base
-        peer-placeholder-shown:text-gray-400
-        peer-focus:top-2
-        peer-focus:text-sm
-        peer-focus:text-brand-rose`}
+        className={`
+        absolute left-4
+        ${isDateOrTime ? "top-2 text-sm text-brand-rose" : "top-2 text-sm text-gray-400"}
+        transition-all
+        pointer-events-none
+
+        ${!isDateOrTime && `
+          peer-placeholder-shown:top-4
+          peer-placeholder-shown:text-base
+          peer-focus:top-2
+          peer-focus:text-sm
+          peer-focus:text-brand-rose
+        `}
+      `}
       >
         {label}
       </label>
+
     </div>
   );
 };
