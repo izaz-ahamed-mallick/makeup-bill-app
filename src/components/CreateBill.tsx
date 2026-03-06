@@ -331,22 +331,27 @@ const CreateBill = () => {
             </div>
 
             {/* DATE + TIME */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
 
-              <PremiumInput
-                label="Service Date"
-                type="date"
-                register={register(`services.${index}.serviceDate` as const)}
-              />
+              <div className="w-full min-w-0">
+                <PremiumInput
+                  label="Service Date"
+                  type="date"
+                  register={register(`services.${index}.serviceDate` as const)}
+                  className="w-full"
+                />
+              </div>
 
-              <PremiumInput
-                label="Service Time"
-                type="time"
-                register={register(`services.${index}.serviceTime` as const)}
-              />
+              <div className="w-full min-w-0">
+                <PremiumInput
+                  label="Service Time"
+                  type="time"
+                  register={register(`services.${index}.serviceTime` as const)}
+                  className="w-full"
+                />
+              </div>
 
             </div>
-
             {/* LOCATION */}
             <div className="mb-6">
 
