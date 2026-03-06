@@ -185,7 +185,7 @@ const CreateBill = () => {
         <BackButton />
       </div>
 
-      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-6 sm:p-12">
+      <div className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl py-6 px-2 sm:p-12">
 
         {/* Header */}
 
@@ -410,15 +410,15 @@ const CreateBill = () => {
           />
 
           {/* Full Payment Toggle */}
-          <label className="flex items-center gap-3 cursor-pointer select-none">
+          <label className="flex items-center gap-3 cursor-pointer select-none group">
             <input
               type="checkbox"
               {...register("full_payment")}
-              className="sr-only peer"
+              className="sr-only"
             />
 
-            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 relative transition">
-              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
+            <div className="w-11 h-6 bg-gray-300 rounded-full relative transition group-has-[:checked]:bg-green-500">
+              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition group-has-[:checked]:translate-x-5"></div>
             </div>
 
             <span className="text-sm font-medium text-brand-text">

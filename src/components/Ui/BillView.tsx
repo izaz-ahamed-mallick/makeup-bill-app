@@ -415,136 +415,150 @@ const BillView = () => {
               Service Details
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
               {bill.services?.map((service, index) => (
+
                 <div
                   key={index}
                   className="
       relative
-      p-5
-      rounded-2xl
-      bg-white
+      p-5 sm:p-6
+      rounded-3xl
+      bg-white/90
+      backdrop-blur-sm
       border border-brand-blush
       shadow-sm
-      hover:shadow-lg
-      transition
+      hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]
+      transition-all duration-300
       overflow-hidden
     "
                 >
 
-                  {/* subtle gold glow */}
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08),transparent_70%)] pointer-events-none"></div>
+                  {/* glow */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.07),transparent_70%)] pointer-events-none"></div>
 
-                  <div className="flex items-start gap-4">
+                  {/* TOP ROW */}
+                  {/* TOP ROW */}
+                  <div className="flex items-start justify-between gap-4 mb-3">
 
-                    {/* Icon */}
-                    <div className="w-11 h-11 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose shadow-sm">
-                      <Sparkles size={18} />
-                    </div>
+                    <div className="flex items-start gap-3">
 
-                    {/* Content */}
-                    <div className="flex-1">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-brand-blush text-brand-rose">
+                        <Sparkles size={18} />
+                      </div>
 
-                      <p className="text-xs text-gray-500 mb-1">
-                        {index === 0 ? "Primary Service" : `Service ${index + 1}`}
-                      </p>
+                      <div>
+                        <p className="text-xs text-gray-400">
+                          {index === 0 ? "Primary Service" : `Service ${index + 1}`}
+                        </p>
 
-                      <p className="font-semibold text-gray-800 text-base">
-                        {service.service}
-                      </p>
+                        <h3 className="font-semibold text-gray-800 text-base">
+                          {service.service}
+                        </h3>
 
-                      <p className="text-sm text-gray-500">
-                        {service.makeup_type}
-                      </p>
-
-                      {/* Service Meta Info */}
-                      <div className="flex flex-col gap-1 mt-2 text-sm text-gray-600">
-
-                        {service.serviceDate && (
-                          <div className="flex items-center gap-2">
-                            <Calendar size={14} className="text-brand-rose" />
-                            {new Date(service.serviceDate).toLocaleDateString("en-IN", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </div>
-                        )}
-
-                        {service.serviceTime && (
-                          <div className="flex items-center gap-2">
-                            <Clock size={14} className="text-brand-rose" />
-                            {service.serviceTime}
-                          </div>
-                        )}
-
-                        {service.location && (
-                          <div className="flex items-center gap-2">
-
-                            <MapPin size={14} className="text-brand-rose" />
-
-                            <span className="flex-1">{service.location}</span>
-
-                            {/* Google Maps button */}
-                            <button
-                              onClick={() => {
-                                const encoded = encodeURIComponent(service.location);
-                                window.open(
-                                  `https://www.google.com/maps/dir/?api=1&destination=${encoded}`,
-                                  "_blank"
-                                );
-                              }}
-                              className="
-                                  flex items-center gap-1
-                                  text-xs
-                                  px-2 py-1
-                                  rounded-full
-                                  bg-brand-rose/10
-                                  text-brand-rose
-                                  hover:bg-brand-rose hover:text-white
-                                  transition
-                                "
-                            >
-                              Directions
-                            </button>
-
-                          </div>
-                        )}
-
+                        <p className="text-sm text-gray-500">
+                          {service.makeup_type}
+                        </p>
                       </div>
 
                     </div>
 
-                    {/* Price */}
-                    <div className="text-right">
+                    {/* PRICE DESKTOP */}
+                    <div className="
+                          hidden md:block
+                          px-3 py-1.5
+                          rounded-full
+                          bg-brand-rose/10
+                          text-brand-rose
+                          font-semibold
+                          text-sm
+                          whitespace-nowrap
+                        ">
+                      {formatCurrency(Number(service.price))}
+                    </div>
 
-                      <div className="text-xs text-gray-400 mb-1">
-                        Price
+                  </div>
+
+                  {/* META INFO */}
+                  <div className="space-y-2 text-sm text-gray-600">
+
+                    {service.serviceDate && (
+                      <div className="flex items-center gap-2">
+                        <Calendar size={14} className="text-brand-rose" />
+                        {new Date(service.serviceDate).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </div>
+                    )}
 
-                      <div className="text-sm font-semibold text-brand-rose">
-                        {formatCurrency(Number(service.price))}
+                    {service.serviceTime && (
+                      <div className="flex items-center gap-2">
+                        <Clock size={14} className="text-brand-rose" />
+                        {service.serviceTime}
                       </div>
+                    )}
 
+                    {service.location && (
+                      <div className="flex items-center gap-2">
+
+                        <MapPin size={14} className="text-brand-rose shrink-0" />
+
+                        <span className="flex-1 break-words">
+                          {service.location}
+                        </span>
+
+                        <button
+                          onClick={() => {
+                            const encoded = encodeURIComponent(service.location);
+                            window.open(
+                              `https://www.google.com/maps/dir/?api=1&destination=${encoded}`,
+                              "_blank"
+                            );
+                          }}
+                          className="
+              text-xs
+              px-2 py-1
+              rounded-full
+              bg-brand-rose/10
+              text-brand-rose
+              hover:bg-brand-rose hover:text-white
+              transition
+            "
+                        >
+                          Directions
+                        </button>
+
+                      </div>
+                    )}
+
+                  </div>
+
+                  {/* PRICE MOBILE */}
+                  <div className="md:hidden mt-4 pt-4 border-t border-brand-blush/50 flex justify-between items-center">
+
+                    <span className="text-xs text-gray-400">
+                      Price
+                    </span>
+
+                    <div className="
+                        px-3 py-1.5
+                        rounded-full
+                        bg-brand-rose/10
+                        text-brand-rose
+                        font-semibold
+                        text-sm
+                      ">
+                      {formatCurrency(Number(service.price))}
                     </div>
 
                   </div>
 
                 </div>
+
               ))}
-
-              {/* Payment Mode */}
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-white border border-brand-blush shadow-sm hover:shadow-md transition md:col-span-2">
-                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-blush text-brand-rose">
-                  <CreditCard size={18} />
-                </div>
-
-                <div>
-                  <p className="text-xs text-gray-500">Payment Mode</p>
-                  <p className="font-medium">{bill.payment_mode}</p>
-                </div>
-              </div>
 
             </div>
 
