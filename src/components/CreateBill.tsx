@@ -177,6 +177,8 @@ const CreateBill = () => {
     }
   };
 
+  const travelExists = services.some(s => s.type === "travel");
+
   if (loadingBill) return <CreateBillLoader />;
 
   return (
@@ -215,31 +217,35 @@ const CreateBill = () => {
 
         <SectionHeader title="Services" />
 
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="
-    relative
-    border border-brand-blush
-    rounded-2xl
-    bg-white
-    p-5 sm:p-7
-    mb-8
-    shadow-sm
-    hover:shadow-md
-    transition-all duration-300
-  "
-          >
+        {fields.map((field, index) => {
+          const isTravel = watch(`services.${index}.type`) === "travel";
+          return (
+            <div
+              key={field.id}
+              className={`
+                  relative
+                  border
+                  rounded-2xl
+                  p-5 sm:p-7
+                  mb-8
+                  shadow-sm
+                  transition-all
+                  duration-300
+                  ${isTravel
+                  ? "border-brand-gold bg-brand-blush/30"
+                  : "border-brand-blush bg-white"}
+`}
+            >
 
-            {/* glow */}
-            <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.06),transparent_70%)] pointer-events-none"></div>
+              {/* glow */}
+              <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.06),transparent_70%)] pointer-events-none"></div>
 
-            {/* HEADER */}
-            <div className="flex items-center justify-between mb-6">
+              {/* HEADER */}
+              <div className="flex items-center justify-between mb-6">
 
-              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
 
-                <div className="
+                  <div className="
           w-8 h-8 sm:w-9 sm:h-9
           rounded-full
           bg-brand-blush
@@ -247,20 +253,24 @@ const CreateBill = () => {
           text-brand-rose
           text-xs font-semibold
         ">
-                  {index + 1}
+                    {index + 1}
+                  </div>
+
+                  <h3 className="font-semibold text-brand-rose text-base sm:text-lg">
+                    {isTravel
+                      ? "Travel Charge"
+                      : index === 0
+                        ? "Primary Service"
+                        : `Service ${index + 1}`}
+                  </h3>
+
                 </div>
 
-                <h3 className="font-semibold text-brand-rose text-base sm:text-lg">
-                  {index === 0 ? "Primary Service" : `Service ${index + 1}`}
-                </h3>
-
-              </div>
-
-              {fields.length > 1 && index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="
+                {fields.length > 1 && index > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="
           text-xs
           px-3 py-1.5
           rounded-full
@@ -269,117 +279,162 @@ const CreateBill = () => {
           hover:bg-red-50
           transition
         "
-                >
-                  Remove
-                </button>
+                  >
+                    Remove
+                  </button>
+                )}
+
+              </div>
+
+              {/* SERVICE TYPE */}
+              {!isTravel && (
+                <div className="mb-8">
+
+                  <p className="text-sm text-gray-500 font-medium mb-4">
+                    Select Service
+                  </p>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+
+                    {["Bridal", "Reception", "Semi Bridal", "Party Makeup"].map((s) => (
+                      <PremiumRadio
+                        key={s}
+                        label={s}
+                        value={s}
+                        register={register(`services.${index}.service` as const)}
+                      />
+                    ))}
+
+                  </div>
+
+                </div>
               )}
 
-            </div>
+              {/* MAKEUP TYPE */}
+              {!isTravel && (
+                <div className="mb-8">
 
-            {/* SERVICE TYPE */}
-            <div className="mb-8">
+                  <p className="text-sm text-gray-500 font-medium mb-4">
+                    Makeup Type
+                  </p>
 
-              <p className="text-sm text-gray-500 font-medium mb-4">
-                Select Service
-              </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
 
-              <div className="
-        grid
-        grid-cols-2
-        sm:grid-cols-4
-        gap-3 sm:gap-4
-      ">
+                    {["HD", "NON HD", "Waterproof", "Sweatproof & Waterproof"].map((type) => (
+                      <PremiumRadio
+                        key={type}
+                        label={type}
+                        value={type}
+                        register={register(`services.${index}.makeup_type` as const)}
+                      />
+                    ))}
 
-                {["Bridal", "Reception", "Semi Bridal", "Party Makeup"].map((s) => (
-                  <PremiumRadio
-                    key={s}
-                    label={s}
-                    value={s}
-                    register={register(`services.${index}.service` as const)}
+                  </div>
+
+                </div>
+              )}
+
+              {/* DATE + TIME */}
+              {!isTravel && <div className="grid grid-cols-2 md:grid-cols-2 gap-5 mb-6">
+
+                <div className="col-span-2 md:col-span-1">
+                  <PremiumInput
+                    label="Service Date"
+                    type="date"
+                    register={register(`services.${index}.serviceDate` as const)}
+                    className="w-full"
                   />
-                ))}
+                </div>
 
-              </div>
-
-            </div>
-
-            {/* MAKEUP TYPE */}
-            <div className="mb-8">
-
-              <p className="text-sm text-gray-500 font-medium mb-4">
-                Makeup Type
-              </p>
-
-              <div className="
-        grid
-        grid-cols-2
-        sm:grid-cols-4
-        gap-3 sm:gap-4
-      ">
-
-                {["HD", "NON HD", "Waterproof", "Sweatproof & Waterproof"].map((type) => (
-                  <PremiumRadio
-                    key={type}
-                    label={type}
-                    value={type}
-                    register={register(`services.${index}.makeup_type` as const)}
+                <div className="col-span-2 md:col-span-1">
+                  <PremiumInput
+                    label="Service Time"
+                    type="time"
+                    register={register(`services.${index}.serviceTime` as const)}
+                    className="w-full"
                   />
-                ))}
+                </div>
 
-              </div>
+              </div>}
+              {/* LOCATION */}
+              {!isTravel && <div className="mb-6">
 
-            </div>
-
-            {/* DATE + TIME */}
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-5 mb-6">
-
-              <div className="col-span-2 md:col-span-1">
                 <PremiumInput
-                  label="Service Date"
-                  type="date"
-                  register={register(`services.${index}.serviceDate` as const)}
-                  className="w-full"
+                  label="Service Location"
+                  register={register(`services.${index}.location` as const)}
                 />
-              </div>
 
-              <div className="col-span-2 md:col-span-1">
-                <PremiumInput
-                  label="Service Time"
-                  type="time"
-                  register={register(`services.${index}.serviceTime` as const)}
-                  className="w-full"
-                />
-              </div>
+              </div>}
 
-            </div>
-            {/* LOCATION */}
-            <div className="mb-6">
-
+              {/* PRICE */}
               <PremiumInput
-                label="Service Location"
-                register={register(`services.${index}.location` as const)}
+                label={isTravel ? "Travel Charge Amount" : "Package Price"}
+                register={register(`services.${index}.price` as const)}
+                currency
               />
 
             </div>
-
-            {/* PRICE */}
-            <PremiumInput
-              label="Package Price"
-              register={register(`services.${index}.price` as const)}
-              currency
-            />
-
-          </div>
-        ))}
+          )
+        })}
         {/* Add Service button */}
-        <div className="flex justify-center mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+
+          {/* Add Service */}
           <button
             type="button"
-            onClick={() => append({ service: "", makeup_type: "", price: "", serviceDate: "", location: "", serviceTime: "" })}
-            className="bg-brand-rose hover:bg-brand-rose/90 text-white px-8 py-3 rounded-full font-medium transition"
+            onClick={() =>
+              append({
+                service: "",
+                makeup_type: "",
+                price: "",
+                serviceDate: "",
+                location: "",
+                serviceTime: "",
+              })
+            }
+            className="
+    bg-brand-rose
+    hover:bg-brand-rose/90
+    text-white
+    px-6 py-3
+    rounded-full
+    font-medium
+    transition
+  "
           >
             + Add Another Service
           </button>
+
+          {/* Travel Charge */}
+          <button
+            type="button"
+            disabled={travelExists}
+            onClick={() =>
+              append({
+                service: "Travel Charge",
+                type: "travel",
+                makeup_type: "",
+                price: "",
+                serviceDate: "",
+                location: "",
+                serviceTime: "",
+              })
+            }
+            className={`
+    px-6 py-3
+    rounded-full
+    font-medium
+    transition
+    border
+    ${travelExists
+                ? "border-gray-300 text-gray-400 cursor-not-allowed bg-gray-100"
+                : "border-brand-rose text-brand-rose hover:bg-brand-rose hover:text-white"
+              }
+  `}
+          >
+            {travelExists ? "Travel Charge Added" : "+ Travel Charge"}
+          </button>
+
         </div>
 
         {/* Payment */}

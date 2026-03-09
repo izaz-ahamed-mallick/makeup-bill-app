@@ -16,6 +16,7 @@ export type Bill = {
     serviceDate: string;
     location: string;
     serviceTime: string;
+    type?: "travel"
   }[];
   makeup_type?: string
 
@@ -41,6 +42,7 @@ export type ServiceItem = {
   serviceDate: string;
   location: string;
   serviceTime: string
+  type?: "travel"
 };
 
 export type BillForm = {

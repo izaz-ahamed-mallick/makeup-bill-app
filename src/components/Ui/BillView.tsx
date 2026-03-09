@@ -24,6 +24,7 @@ interface Bill {
     serviceDate: string;
     location: string;
     serviceTime: string;
+    type?: "travel"
   }[];
   payment_mode?: string
   total_package: number;
