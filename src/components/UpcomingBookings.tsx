@@ -21,21 +21,58 @@ const UpcomingBookings = () => {
   const [bookings, setBookings] = useState<Bill[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [loadingIdwp, setLoadingIdwp] = useState<number | null>(null);
 
-  const fetchBookings = async () => {
-    setLoading(true);
-
-    const { data } = await supabase
-      .from("bills")
-      .select("*")
-      .gte("date", new Date().toISOString().split("T")[0])
-      .order("date", { ascending: true });
-
-    setBookings(data || []);
-    setLoading(false);
+  const getServiceDate = (booking: Bill) => {
+    return booking.services
+      ?.filter((s) => s.serviceDate)
+      ?.sort(
+        (a, b) =>
+          new Date(a.serviceDate).getTime() -
+          new Date(b.serviceDate).getTime()
+      )?.[0]?.serviceDate;
   };
 
   useEffect(() => {
+
+    const fetchBookings = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("bills")
+        .select("*");
+
+      if (error) {
+        console.error(error);
+        setBookings([]);
+        setLoading(false);
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const upcoming = (data || [])
+        .filter((booking) => {
+          const serviceDate = getServiceDate(booking);
+
+          if (!serviceDate) return false;
+
+          const date = new Date(serviceDate);
+          date.setHours(0, 0, 0, 0);
+
+          return date >= today;
+        })
+        .sort((a, b) => {
+          const dateA = new Date(getServiceDate(a)!);
+          const dateB = new Date(getServiceDate(b)!);
+
+          return dateA.getTime() - dateB.getTime();
+        });
+
+      setBookings(upcoming);
+      setLoading(false);
+    };
     fetchBookings();
   }, []);
 
@@ -48,30 +85,46 @@ const UpcomingBookings = () => {
     }, 800);
   };
 
-  const handleWhatsApp = async (booking: Bill) => {
-    setLoadingId(booking.id);
+  const handleWhatsApp = async (booking: Bill, phoneNumber: string) => {
+    setLoadingIdwp(booking.id);
 
-    await new Promise((res) => setTimeout(res, 800));
+    try {
+      const serviceDate = getServiceDate(booking);
 
-    const message = encodeURIComponent(
-      `Hello ${booking.name},
+      const service = booking.services?.find(
+        (s) => s.serviceDate === serviceDate
+      );
+
+      const message = encodeURIComponent(
+        `Hello ${booking.name},
 
 This is a friendly reminder from *Puja's Touch – Luxury Bridal Makeup Artist*.
 
 Your makeup booking is scheduled for:
 
-Date: ${booking.date}
-Time: ${booking.time}
+Date: ${serviceDate}
+Time: ${service?.serviceTime || "As scheduled"}
 
 I will arrive at your location at the scheduled time.
 
 Thank you for choosing *Puja's Touch*.
 
 — Puja's Touch`
-    );
+      );
 
-    window.open(`https://wa.me/91${booking.phone}?text=${message}`, "_blank");
-    setLoadingId(null);
+      const phone = phoneNumber.replace(/\D/g, "");
+
+      const whatsappNumber = phone.startsWith("91")
+        ? phone
+        : `91${phone}`;
+
+      window.open(
+        `https://wa.me/${whatsappNumber}?text=${message}`,
+        "_blank"
+      );
+    } finally {
+      setLoadingIdwp(null);
+    }
   };
 
   const openDirections = (location: string) => {
@@ -92,23 +145,27 @@ Thank you for choosing *Puja's Touch*.
     return "upcoming";
   };
 
+
   const todayBookings = bookings.filter(
-    (b) => getBookingStatus(b.date) === "today"
+    (b) => getBookingStatus(getServiceDate(b)) === "today"
   );
 
   const tomorrowBookings = bookings.filter(
-    (b) => getBookingStatus(b.date) === "tomorrow"
+    (b) => getBookingStatus(getServiceDate(b)) === "tomorrow"
   );
 
   const upcomingBookings = bookings.filter(
-    (b) => getBookingStatus(b.date) === "upcoming"
+    (b) => getBookingStatus(getServiceDate(b)) === "upcoming"
   );
 
   /* BOOKING CARD */
 
   const BookingCard = (booking: Bill) => {
-
-    const status = getBookingStatus(booking.date);
+    const phoneNumbers = booking.phone
+      ?.split(",")
+      .map((phone) => phone.trim())
+      .filter(Boolean);
+    const status = getBookingStatus(getServiceDate(booking));
 
     return (
       <div
@@ -282,16 +339,44 @@ Thank you for choosing *Puja's Touch*.
             )}
           </button>
 
-          <button
-            onClick={() => handleWhatsApp(booking)}
-            className="
-            flex-1 flex items-center justify-center gap-2
-            rounded-full bg-green-500 text-white py-2.5 text-sm
-          "
-          >
-            <MessageCircle size={16} />
-            Reminder
-          </button>
+          {phoneNumbers?.length === 1 ? (
+            <button
+              onClick={() => handleWhatsApp(booking, phoneNumbers[0])}
+              disabled={loadingId === booking.id}
+              className="
+      flex-1 flex items-center justify-center gap-2
+      rounded-full bg-green-500 text-white py-2.5 text-sm
+      disabled:opacity-70 disabled:cursor-not-allowed
+    "
+            >
+              {loadingId === booking.id ? (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <MessageCircle size={16} />
+                  Reminder
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="flex-1 flex gap-2">
+              {phoneNumbers?.map((phone, index) => (
+                <button
+                  key={phone}
+                  onClick={() => handleWhatsApp(booking, phone)}
+                  disabled={loadingId === booking.id}
+                  className="
+          flex-1 flex items-center justify-center gap-2
+          rounded-full bg-green-500 text-white py-2.5 text-sm
+          disabled:opacity-70 disabled:cursor-not-allowed
+        "
+                >
+                  <MessageCircle size={16} />
+                  {index === 0 ? "Number 1" : "Number 2"}
+                </button>
+              ))}
+            </div>
+          )}
 
         </div>
 
