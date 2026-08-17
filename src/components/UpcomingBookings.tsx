@@ -342,14 +342,14 @@ Thank you for choosing *Puja's Touch*.
           {phoneNumbers?.length === 1 ? (
             <button
               onClick={() => handleWhatsApp(booking, phoneNumbers[0])}
-              disabled={loadingId === booking.id}
+              disabled={loadingIdwp === booking.id}
               className="
       flex-1 flex items-center justify-center gap-2
       rounded-full bg-green-500 text-white py-2.5 text-sm
       disabled:opacity-70 disabled:cursor-not-allowed
     "
             >
-              {loadingId === booking.id ? (
+              {loadingIdwp === booking.id ? (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
