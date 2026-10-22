@@ -44,16 +44,30 @@ export const getDownloadInvoice = async (
 
 
 
+
 export const sendInvoiceWhatsapp = (bill: Bill) => {
   try {
-    const message = `
-Hello ${bill.name},
+    if (!bill.phone?.trim()) {
+      console.error("Phone number is missing");
+      return;
+    }
+
+    const phone = bill.phone.replace(/\D/g, "");
+
+    const formattedPhone = phone.startsWith("91")
+      ? phone
+      : `91${phone}`;
+
+    if (!/^91\d{10}$/.test(formattedPhone)) {
+      console.error("Invalid phone number:", bill.phone);
+      return;
+    }
+
+    const message = `Hello ${bill.name},
 
 Greetings from *Puja's Touch – Luxury Bridal Makeup Artist*
 
-Your booking invoice has been attached with this message.
-
-Please review the invoice for the complete service and payment details.
+Your booking invoice is ready. Please review the invoice for the complete service and payment details.
 
 If you have any questions, feel free to contact us.
 
@@ -62,13 +76,11 @@ We look forward to making your special day even more beautiful.
 
 Warm regards,
 *Puja's Touch*
-Luxury Bridal Makeup Artist
-`;
-    const encoded = encodeURIComponent(message);
+Luxury Bridal Makeup Artist`;
 
-    const whatsappUrl = `https://wa.me/91${bill.phone}?text=${encoded}`;
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
 
-    window.open(whatsappUrl, "_blank");
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   } catch (error) {
     console.error("WhatsApp failed:", error);
   }
