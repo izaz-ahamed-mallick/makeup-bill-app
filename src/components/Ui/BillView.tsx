@@ -219,118 +219,95 @@ const BillView = () => {
         />
 
         {/* GOLD FRAME */}
-        <div className="absolute inset-0 border-[3px] border-yellow-400/50 rounded-3xl pointer-events-none"></div>
+
+        {/* PREMIUM BURGUNDY & CHAMPAGNE GOLD FRAME */}
+        <div className="absolute inset-0 border-[2px] border-[#D9B66F]/50 rounded-3xl pointer-events-none" />
 
         {/* CORNERS */}
-        <div className="absolute top-0 left-0 w-20 h-20 border-l-4 border-t-4 border-yellow-400 rounded-tl-3xl"></div>
-        <div className="absolute top-0 right-0 w-20 h-20 border-r-4 border-t-4 border-yellow-400 rounded-tr-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-20 h-20 border-l-4 border-b-4 border-yellow-400 rounded-bl-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-20 h-20 border-r-4 border-b-4 border-yellow-400 rounded-br-3xl"></div>
-
-
+        <div className="absolute top-0 left-0 w-16 h-16 border-l-[3px] border-t-[3px] border-[#E8C982] rounded-tl-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-16 h-16 border-r-[3px] border-t-[3px] border-[#E8C982] rounded-tr-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-16 h-16 border-l-[3px] border-b-[3px] border-[#E8C982] rounded-bl-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-16 h-16 border-r-[3px] border-b-[3px] border-[#E8C982] rounded-br-3xl pointer-events-none" />
 
         {/* HEADER */}
-        <div className="relative text-center px-5 md:px-10 pt-10 md:pt-12 pb-8 md:pb-10 bg-gradient-to-r from-brand-rose via-pink-500 to-brand-rose text-white overflow-hidden">
+        <div className="relative text-center px-5 md:px-10 pt-10 md:pt-12 pb-8 md:pb-10 bg-gradient-to-br from-[#35101F] via-[#681E3B] to-[#421326] text-white overflow-hidden">
 
-          {/* SOFT GOLD LIGHT EFFECT */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.18),transparent_60%)] pointer-events-none"></div>
+          {/* SOFT CHAMPAGNE GLOW */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,201,130,0.16),transparent_65%)] pointer-events-none" />
 
-          {/* WATERMARK LOGO */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
-            <img src="/logo.png" className="w-96 object-cover" />
+          {/* SUBTLE WATERMARK */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-[0.035] pointer-events-none">
+            <img src="/logo.png" alt="" className="w-96 object-cover" />
           </div>
 
-          {/* GOLD DECORATIVE LINE TOP */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+          {/* TOP ACCENT */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E8C982] to-transparent" />
 
           {/* LOGO BADGE */}
           <div className="relative flex justify-center mb-6">
-            <div className="absolute w-32 h-32 rounded-full bg-yellow-400/20 blur-xl"></div>
+            <div className="absolute w-32 h-32 rounded-full bg-[#E8C982]/20 blur-2xl" />
 
             <div className="relative flex justify-center mb-8">
-
-              <div
-                className="
-    w-28 h-28
-    rounded-full
-    overflow-hidden
-    border-[4px] border-yellow-400
-    shadow-[0_12px_35px_rgba(0,0,0,0.35)]
-    bg-white
-  "
-              >
+              <div className="w-28 h-28 rounded-full overflow-hidden border-[3px] border-[#E8C982] shadow-[0_12px_35px_rgba(0,0,0,0.35)] bg-white ring-4 ring-[#E8C982]/10">
                 <img
                   src="/logo.png"
                   alt="Puja's Touch Logo"
                   className="w-full h-full object-cover"
                 />
               </div>
-
             </div>
-
           </div>
 
           {/* BRAND NAME */}
           <h1
-            className="
-  text-5xl
-  font-[Playfair_Display]
-  font-semibold
-  tracking-wide
-  leading-[1.2]
-  pb-2
-  inline-block
-  bg-[linear-gradient(135deg,#fff7c2,#ffd700,#f7b500,#ffd700,#fff7c2)]
-  bg-clip-text
-  text-transparent
-  drop-shadow-[0_3px_6px_rgba(0,0,0,0.35)]
-  "
+            className="text-5xl font-[Playfair_Display] font-semibold tracking-wide leading-[1.2] pb-2 inline-block bg-[linear-gradient(135deg,#FFF4DF,#E8C982,#D6A84F,#F6E2AE,#FFF4DF)] bg-clip-text text-transparent drop-shadow-[0_3px_6px_rgba(0,0,0,0.35)]"
             style={{
-              textShadow:
-                "0 2px 4px rgba(0,0,0,0.25), 0 0 10px rgba(255,215,0,0.35)"
+              textShadow: "0 2px 4px rgba(0,0,0,0.25), 0 0 12px rgba(232,201,130,0.18)"
             }}
           >
             Puja's Touch
           </h1>
 
-          {/* GOLD DIVIDER */}
+          {/* CHAMPAGNE DIVIDER */}
           <div className="flex justify-center mt-3">
-            <div className="w-24 h-[2px] bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 rounded-full"></div>
+            <div className="w-24 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[#E8C982] to-transparent" />
           </div>
 
           {/* TAGLINE */}
-          <p className="mt-4 text-sm tracking-wide uppercase opacity-90">
+          <p className="mt-4 text-sm tracking-[0.18em] uppercase text-[#FFF4DF]/95">
             Luxury Bridal Makeup Studio
           </p>
 
           {/* LOCATION */}
-          <p className="text-xs mt-1 opacity-80">
+          <p className="text-xs mt-2 tracking-wide text-white/70">
             Khejurhati Bazar • Khandaghosh • Bardhaman
           </p>
 
           {/* CONTACT */}
-          <div className="mt-6 flex justify-center gap-3 md:gap-8 text-sm flex-wrap">
+          <div className="relative mt-6 flex justify-center gap-3 md:gap-4 text-sm flex-wrap">
 
-            <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
-              <Phone size={16} />
+            <span className="flex items-center gap-2 border border-[#E8C982]/25 bg-white/[0.06] px-4 py-2 rounded-full backdrop-blur-md text-[#FFF4DF]">
+              <Phone size={16} className="text-[#E8C982]" />
               9064689899
             </span>
 
             <a
               href="https://www.facebook.com/share/1891GsRTi7/?mibextid=wwXIfr"
               target="_blank"
-              className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition backdrop-blur-sm"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 border border-[#E8C982]/25 bg-white/[0.06] px-4 py-2 rounded-full hover:bg-[#E8C982]/15 hover:border-[#E8C982]/60 transition-all duration-300 backdrop-blur-md text-[#FFF4DF]"
             >
-              <Facebook size={16} />
+              <Facebook size={16} className="text-[#E8C982]" />
               Facebook
             </a>
 
           </div>
 
-          {/* GOLD DECORATIVE LINE BOTTOM */}
-          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+          {/* BOTTOM ACCENT */}
+          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E8C982] to-transparent" />
 
         </div>
+
 
         <div className="relative p-5 md:p-10">
 

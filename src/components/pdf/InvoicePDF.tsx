@@ -23,62 +23,66 @@ Font.register({
 const styles = StyleSheet.create({
 
   page: {
-    backgroundColor: "#ffffff",
-    padding: 10,
+    backgroundColor: "#F7F1EC",
+    padding: 18,
     fontFamily: "Helvetica"
   },
 
   container: {
-    border: "3px solid #facc15",
-    borderRadius: 16,
+    border: "1px solid #D8C3A0",
+    borderRadius: 12,
     overflow: "hidden",
     position: "relative",
-    flexGrow: 1
+    flexGrow: 1,
+    backgroundColor: "#FFFCF8"
   },
 
   /* watermark */
 
   watermark: {
     position: "absolute",
-    opacity: 0.04,
-    width: 450,
-    top: 200,
-    left: 75
+    opacity: 0.025,
+    width: 400,
+    top: 220,
+    left: 95
   },
 
   /* HEADER */
 
   header: {
-    backgroundColor: "#ec4899",
-    paddingTop: 12,
-    paddingBottom: 8,
+    backgroundColor: "#5A1938",
+    paddingTop: 18,
+    paddingBottom: 12,
+    paddingHorizontal: 14,
     alignItems: "center",
-    position: "relative"
+    position: "relative",
+    borderBottomWidth: 3,
+    borderBottomColor: "#C9A45C"
   },
 
   logo: {
     width: 50,
     height: 50,
     borderRadius: 50,
-    border: "3px solid #facc15",
+    border: "2px solid #C9A45C",
     marginBottom: 3
   },
   brand: {
     fontSize: 24,
-    color: "#ffd700",
+    color: "#F3DCA7",
     fontFamily: "PlayfairDisplay",
     letterSpacing: 1.5,
   },
   tagline: {
     marginTop: 3,
     fontSize: 8,
-    color: "#fff",
+    color: "#FFF9F0",
     letterSpacing: 1,
   },
 
   location: {
     fontSize: 7,
-    color: "#fff",
+    color: "#FFF9F0",
     marginTop: 2,
     letterSpacing: 0.5
   },
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
   contactItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "rgba(255,255,255,0.08)",
     padding: "2 7",
     borderRadius: 20,
     marginHorizontal: 2
@@ -109,19 +113,23 @@ const styles = StyleSheet.create({
 
   contactText: {
     fontSize: 8,
-    color: "#fff"
+    color: "#FFF9F0"
   }
   ,
   /* SECTION */
 
   section: {
-    padding: 6
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 5
   },
 
   sectionTitle: {
-    fontSize: 12,
-    marginBottom: 6,
-    fontWeight: "bold"
+    fontSize: 11,
+    marginBottom: 7,
+    fontWeight: "bold",
+    color: "#5A1938",
+    letterSpacing: 0.3
   },
 
   grid: {
@@ -131,92 +139,105 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: "48%",
-    border: "1px solid #f5cbd8",
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 3,
-    marginBottom: 3
+    width: "48.5%",
+    border: "1px solid #E8DCD5",
+    borderRadius: 7,
+    paddingVertical: 8,
+    paddingHorizontal: 9,
+    marginBottom: 5,
+    backgroundColor: "#FFFFFF"
   },
 
   cardFull: {
     width: "100%",
-    border: "1px solid #f5cbd8",
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    marginBottom: 4
+    border: "1px solid #E8DCD5",
+    borderRadius: 7,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    backgroundColor: "#FFFFFF"
   },
 
   label: {
-    fontSize: 6,
-    color: "#777"
+    fontSize: 7.5,
+    color: "#5A1938",
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    textTransform: "uppercase",
+    marginBottom: 2
   },
 
   value: {
-    fontSize: 7,
-    marginTop: 1
+    fontSize: 8,
+    marginTop: 3,
+    color: "#30232A"
   },
 
   /* PAYMENT */
 
   paymentBox: {
-    border: "1px solid #f5cbd8",
-    borderRadius: 12,
-    backgroundColor: "#fff5f7",
-    padding: 9
+    border: "1px solid #E5D5C4",
+    borderRadius: 9,
+    backgroundColor: "#FFF9F2",
+    paddingVertical: 9,
+    paddingHorizontal: 11
   },
 
   paymentRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 4,
-    paddingBottom: 4,
-    borderBottom: "1px dashed #f3c6d3"
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottom: "1px solid #E9DDD4"
   },
 
   paymentLabel: {
-    fontSize: 9,
-    color: "#555"
+    fontSize: 8,
+    color: "#65545C"
   },
 
   paymentValue: {
-    fontSize: 10,
-    fontWeight: "bold"
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#30232A"
   },
 
   dueRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 6,
-    paddingTop: 6,
-    borderTop: "2px solid #f3c6d3"
+    marginTop: 7,
+    paddingTop: 8,
+    borderTop: "1.5px solid #C9A45C"
   },
 
   dueLabel: {
     fontSize: 10,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#5A1938"
   },
 
   dueValue: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#e11d48"
+    color: "#76294A"
   },
   /* TERMS */
 
   termsBox: {
-    border: "1px solid #fde68a",
-    backgroundColor: "#fff9db",
-    borderRadius: 10,
-    padding: 6
+    border: "1px solid #E5D5C4",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    paddingVertical: 9,
+    paddingHorizontal: 11
   },
 
   term: {
-    fontSize: 6,
-    marginBottom: 1
+    fontSize: 8,
+    lineHeight: 1.5,
+    marginBottom: 5,
+    color: "#403038"
   },
 
   /* SIGNATURE */
@@ -224,17 +245,20 @@ const styles = StyleSheet.create({
   signatureSection: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 4
+    alignItems: "flex-end",
+    marginTop: 8,
+    paddingHorizontal: 4
   },
 
   signature: {
-    fontSize: 18,
+    fontSize: 21,
     fontFamily: "GreatVibes",
-    color: "#444"
+    color: "#5A1938"
   },
   smallLabel: {
     fontSize: 7,
-    color: "#777"
+    color: "#76666C",
+    letterSpacing: 0.25
   },
   signatureDivider: {
     flexDirection: "row",
@@ -247,14 +271,14 @@ const styles = StyleSheet.create({
   signatureLine: {
     width: 80,
     height: 1,
-    backgroundColor: "#facc15"
+    backgroundColor: "#C9A45C"
   },
 
   signatureStar: {
     fontSize: 10,
     marginLeft: 6,
     marginRight: 6,
-    color: "#facc15"
+    color: "#C9A45C"
   },
 
   /* FOOTER */
@@ -263,7 +287,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     textAlign: "center",
     fontSize: 7,
-    color: "#666"
+    color: "#75666B"
   }
   ,
   /* GOLD DIVIDER */
@@ -277,14 +301,14 @@ const styles = StyleSheet.create({
   dividerLine: {
     width: 70,
     height: 1,
-    backgroundColor: "#facc15"
+    backgroundColor: "#C9A45C"
   },
 
   dividerStar: {
     fontSize: 8,
     marginLeft: 6,
     marginRight: 6,
-    color: "#facc15"
+    color: "#C9A45C"
   },
 
   /* INVOICE BADGE */
@@ -293,11 +317,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 18,
     top: 12,
-    border: "1px solid #facc15",
+    border: "1px solid #C9A45C",
     borderRadius: 20,
     padding: "3 8",
     fontSize: 8,
-    color: "#facc15"
+    color: "#C9A45C"
   },
 
   statusBadge: {
@@ -307,18 +331,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: "3 8",
     fontSize: 8,
-    backgroundColor: "#16a34a",
-    color: "#fff"
+    backgroundColor: "#356B55",
+    color: "#FFF9F0"
   },
 
   /* FLORAL BACKGROUND */
 
   floralPattern: {
     position: "absolute",
-    opacity: 0.09,
-    width: 500,
-    top: 120,
-    left: 40
+    opacity: 0.035,
+    width: 420,
+    top: 145,
+    left: 70
   },
   rupeeIcon: {
     width: 10,
@@ -368,7 +392,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
               style={{
                 width: 80,
                 height: 1,
-                backgroundColor: "#ffd700",
+                backgroundColor: "#D8B56D",
                 marginTop: 2,
                 marginBottom: 2
               }}
@@ -422,13 +446,14 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
               </View>
 
               <View style={styles.card}>
-
                 <Text style={styles.label}>Booking Date</Text>
-                <Image
-                  src="/calender.png"
-                  style={{ width: 8, height: 8, marginRight: 3 }}
-                />
-                <Text style={styles.value}>{bill.date}</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 3 }}>
+                  <Image
+                    src="/calender.png"
+                    style={{ width: 9, height: 9, marginRight: 4 }}
+                  />
+                  <Text style={styles.value}>{bill.date}</Text>
+                </View>
               </View>
 
               <View style={styles.card}>
@@ -476,7 +501,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                         {service.service}
                       </Text>
 
-                      <Text style={{ fontSize: 8, color: "#666", marginTop: 1 }}>
+                      <Text style={{ fontSize: 8, color: "#75666B", marginTop: 1 }}>
                         {service.makeup_type}
                       </Text>
 
@@ -495,7 +520,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                             style={{ width: 8, height: 8, marginRight: 3 }}
                           />
 
-                          <Text style={{ fontSize: 8, color: "#555" }}>
+                          <Text style={{ fontSize: 8, color: "#65545C" }}>
                             {service.serviceDate}
                           </Text>
                         </View>
@@ -515,7 +540,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                             style={{ width: 8, height: 8, marginRight: 3 }}
                           />
 
-                          <Text style={{ fontSize: 8, color: "#555" }}>
+                          <Text style={{ fontSize: 8, color: "#65545C" }}>
                             {service.serviceTime}
                           </Text>
                         </View>
@@ -535,7 +560,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                             style={{ width: 8, height: 8, marginRight: 3 }}
                           />
 
-                          <Text style={{ fontSize: 8, color: "#555" }}>
+                          <Text style={{ fontSize: 8, color: "#65545C" }}>
                             {service.location}
                           </Text>
                         </View>
@@ -551,7 +576,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                         style={{
                           fontSize: 10,
                           fontWeight: "bold",
-                          color: "#e11d48"
+                          color: "#76294A"
                         }}
                       >
                         {service.price}
@@ -579,7 +604,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
             <View style={styles.dividerLine} />
           </View>
           {/* PAYMENT */}
-          <View style={styles.section}>
+          <View wrap={false} style={styles.section}>
 
             <Text style={styles.sectionTitle}>
               Payment Summary
@@ -640,19 +665,20 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
             </View>
 
           </View>
-          <View style={styles.goldDivider}>
-            <View style={styles.dividerLine} />
-            <Image src="/star.png" style={styles.starIcon} />
-            <View style={styles.dividerLine} />
-          </View>
-          {/* TERMS */}
-          <View style={styles.section}>
+          {/* TERMS: keep the divider, heading and all conditions together */}
+          <View wrap={false}>
+            <View style={styles.goldDivider}>
+              <View style={styles.dividerLine} />
+              <Image src="/star.png" style={styles.starIcon} />
+              <View style={styles.dividerLine} />
+            </View>
+            <View style={styles.section} wrap={false}>
 
             <Text style={styles.sectionTitle}>
               Terms & Conditions
             </Text>
 
-            <View style={styles.termsBox}>
+            <View style={styles.termsBox} wrap={false}>
 
               <Text style={styles.term}>• Advance payment confirms the booking.</Text>
               <Text style={styles.term}>• Advance amount is non-refundable once the booking is confirmed.</Text>
@@ -662,7 +688,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
               <Text style={styles.term}>• Puja's Touch is not responsible for delays caused by external factors.</Text>
 
             </View>
-
+            </View>
           </View>
           <View style={styles.goldDivider}>
             <View style={styles.dividerLine} />
@@ -680,7 +706,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                 <View
                   style={{
                     borderBottomWidth: 1,
-                    borderBottomColor: "#999",
+                    borderBottomColor: "#C4B5B9",
                     width: 140,
                     marginTop: 4,
                     marginBottom: 4
@@ -699,7 +725,7 @@ export const InvoicePDF: React.FC<pdfType> = ({ bill, invoiceNumber }) => {
                 <View
                   style={{
                     borderBottomWidth: 1,
-                    borderBottomColor: "#999",
+                    borderBottomColor: "#C4B5B9",
                     width: 140,
                     marginTop: 4,
                     marginBottom: 4
